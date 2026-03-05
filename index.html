@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏘 Хатинград — Збудуй своє місто</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --soil:    #2d1b0e;
+  --bark:    #4a2c0a;
+  --wood:    #8b5e2a;
+  --straw:   #c8942a;
+  --gold:    #f5c842;
+  --leaf:    #3d7a2a;
+  --grass:   #4e9e35;
+  --sky:     #7ecbf0;
+  --stone:   #7a8a7a;
+  --smoke:   #c8d4c8;
+  --cream:   #f5edd8;
+  --ink:     #1a1208;
+  --ember:   #e85c20;
+  --fog:     rgba(245,237,216,0.07);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--soil);
+  color: var(--cream);
+  font-family: 'Pixelify Sans', sans-serif;
+  font-size: 18px;
+  overflow-x: hidden;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ctext y='20' font-size='20'%3E⛏%3C/text%3E%3C/svg%3E") 12 12, auto;
+}
+
+/* ===== PIXEL BORDER UTILITY ===== */
+.pixel-box {
+  border: 3px solid var(--straw);
+  box-shadow:
+    -3px 0 0 var(--bark),
+    3px 0 0 var(--bark),
+    0 -3px 0 var(--bark),
+    0 3px 0 var(--bark),
+    inset 0 0 0 1px var(--wood);
+}
+
+/* ===== ANIMATED SKY HEADER ===== */
+#hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(180deg,
+    #0d1a2e 0%,
+    #1a3a5a 30%,
+    #e8a04a 65%,
+    #c86428 80%,
+    #7a3218 100%
+  );
+}
+
+/* Stars */
+.stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.star {
+  position: absolute;
+  width: 3px; height: 3px;
+  background: white;
+  animation: twinkle 2s infinite alternate;
+}
+.star:nth-child(2n) { width: 2px; height: 2px; animation-delay: 0.5s; }
+.star:nth-child(3n) { animation-delay: 1s; background: #ffe8a0; }
+
+@keyframes twinkle {
+  from { opacity: 0.3; }
+  to   { opacity: 1; }
+}
+
+/* Pixel clouds */
+.clouds {
+  position: absolute;
+  top: 15%;
+  width: 100%;
+  pointer-events: none;
+}
+.cloud {
+  position: absolute;
+  background: #fde8c0;
+  opacity: 0.6;
+  animation: drift linear infinite;
+}
+.cloud::before, .cloud::after {
+  content: '';
+  position: absolute;
+  background: inherit;
+}
+
+/* Silhouette city */
+.skyline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 240px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0;
+  pointer-events: none;
+}
+
+.building-sil {
+  background: var(--ink);
+  position: relative;
+  flex-shrink: 0;
+}
+.building-sil::before {
+  content: '';
+  position: absolute;
+  background: var(--ink);
+}
+/* Windows glow */
+.building-sil .win {
+  position: absolute;
+  background: var(--gold);
+  animation: flicker 3s infinite alternate;
+  box-shadow: 0 0 6px var(--gold);
+}
+@keyframes flicker {
+  0%,90% { opacity: 1; }
+  95% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+/* Smoke */
+.smoke-puff {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  width: 8px; height: 8px;
+  background: var(--smoke);
+  border-radius: 50%;
+  opacity: 0;
+  animation: rise 4s ease-out infinite;
+  transform: translateX(-50%);
+}
+.smoke-puff:nth-child(2) { animation-delay: 1.5s; left: 40%; }
+.smoke-puff:nth-child(3) { animation-delay: 3s; left: 60%; width: 6px; height: 6px; }
+@keyframes rise {
+  0%   { opacity: 0.7; transform: translateX(-50%) translateY(0) scale(1); }
+  100% { opacity: 0;   transform: translateX(-50%) translateY(-80px) scale(3); }
+}
+
+/* Hero content */
+.hero-content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 2rem;
+  animation: fadeUp 1s ease both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(2rem, 8vw, 5rem);
+  color: var(--gold);
+  text-shadow:
+    4px 4px 0 var(--bark),
+    -2px -2px 0 var(--bark),
+    0 0 40px rgba(245,200,66,0.5);
+  letter-spacing: 4px;
+  line-height: 1.3;
+  margin-bottom: 0.5rem;
+}
+
+.hero-sub {
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  color: var(--straw);
+  font-weight: 600;
+  letter-spacing: 2px;
+  margin-bottom: 2.5rem;
+  text-shadow: 2px 2px 0 var(--bark);
+}
+
+.hero-badges {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+.badge {
+  background: var(--bark);
+  border: 2px solid var(--wood);
+  padding: 6px 14px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: var(--smoke);
+  letter-spacing: 1px;
+  box-shadow: 3px 3px 0 var(--soil);
+}
+
+.cta-btn {
+  display: inline-block;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  padding: 16px 32px;
+  background: var(--grass);
+  color: var(--cream);
+  text-decoration: none;
+  border: 3px solid var(--leaf);
+  box-shadow: 4px 4px 0 var(--soil), inset 0 1px 0 rgba(255,255,255,0.2);
+  transition: transform 0.1s, box-shadow 0.1s;
+  letter-spacing: 2px;
+}
+.cta-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--soil);
+  background: #5ab03e;
+}
+.cta-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--soil);
+}
+
+/* Scroll hint */
+.scroll-hint {
+  position: absolute;
+  bottom: 260px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: var(--smoke);
+  opacity: 0.6;
+  animation: bounce 2s infinite;
+  z-index: 10;
+  letter-spacing: 1px;
+}
+@keyframes bounce {
+  0%,100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(8px); }
+}
+
+/* ===== SECTIONS ===== */
+section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 80px 24px;
+}
+
+.section-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(1rem, 3vw, 1.6rem);
+  color: var(--gold);
+  text-shadow: 3px 3px 0 var(--bark);
+  margin-bottom: 48px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, var(--wood) 0, var(--wood) 8px, transparent 8px, transparent 16px);
+}
+
+/* ===== MECHANICS GRID ===== */
+.mechanics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.mechanic-card {
+  background: var(--bark);
+  border: 2px solid var(--wood);
+  padding: 24px 20px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: fadeUp 0.6s ease both;
+  box-shadow: 4px 4px 0 var(--soil);
+}
+.mechanic-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 7px 7px 0 var(--soil);
+}
+.mechanic-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--straw);
+}
+.mechanic-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 12px;
+  filter: drop-shadow(2px 2px 0 var(--soil));
+}
+.mechanic-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: var(--straw);
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+.mechanic-desc {
+  font-size: 15px;
+  color: var(--smoke);
+  line-height: 1.6;
+}
+
+/* ===== RESOURCES TABLE ===== */
+.res-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+.res-card {
+  background: var(--bark);
+  border: 2px solid var(--wood);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 3px 3px 0 var(--soil);
+  animation: fadeUp 0.5s ease both;
+}
+.res-card:nth-child(1) { animation-delay: 0.05s; }
+.res-card:nth-child(2) { animation-delay: 0.10s; }
+.res-card:nth-child(3) { animation-delay: 0.15s; }
+.res-card:nth-child(4) { animation-delay: 0.20s; }
+.res-card:nth-child(5) { animation-delay: 0.25s; }
+.res-card:nth-child(6) { animation-delay: 0.30s; }
+.res-emoji { font-size: 2.2rem; filter: drop-shadow(2px 2px 0 var(--soil)); }
+.res-name  { font-family: 'Press Start 2P', monospace; font-size: 9px; color: var(--gold); }
+.res-src   { font-size: 13px; color: var(--smoke); line-height: 1.4; }
+.res-use   { font-size: 12px; color: var(--straw); border-top: 1px dashed var(--wood); padding-top: 6px; }
+
+/* ===== BUILDINGS ===== */
+.buildings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+.bld-card {
+  background: var(--bark);
+  border: 2px solid var(--wood);
+  padding: 18px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  box-shadow: 3px 3px 0 var(--soil);
+  transition: transform 0.15s, border-color 0.15s;
+}
+.bld-card:hover { transform: translate(-2px,-2px); border-color: var(--straw); }
+.bld-emoji { font-size: 2.4rem; flex-shrink: 0; filter: drop-shadow(2px 2px 0 var(--soil)); }
+.bld-info {}
+.bld-name { font-family: 'Press Start 2P', monospace; font-size: 9px; color: var(--straw); margin-bottom: 6px; }
+.bld-cost { font-size: 13px; color: var(--smoke); margin-bottom: 4px; }
+.bld-effect { font-size: 13px; color: var(--grass); }
+.bld-card.final { border-color: var(--gold); background: #3a2505; }
+.bld-card.final .bld-name { color: var(--gold); }
+
+/* ===== ARCHITECTURE ===== */
+.arch-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+@media (max-width: 700px) { .arch-cols { grid-template-columns: 1fr; } }
+
+.folder-tree {
+  background: var(--ink);
+  border: 2px solid var(--wood);
+  padding: 24px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  line-height: 2.2;
+  color: var(--smoke);
+  box-shadow: 4px 4px 0 var(--soil);
+  overflow-x: auto;
+}
+.folder-tree .dir  { color: var(--straw); }
+.folder-tree .file { color: var(--grass);  padding-left: 2em; }
+.folder-tree .sub  { padding-left: 1em; color: var(--sky); }
+
+.scripts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.script-row {
+  background: var(--ink);
+  border: 1px solid var(--wood);
+  border-left: 4px solid var(--leaf);
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  transition: border-left-color 0.2s;
+}
+.script-row:hover { border-left-color: var(--gold); }
+.script-name { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--straw); white-space: nowrap; }
+.script-desc { font-size: 13px; color: var(--smoke); text-align: right; }
+
+/* ===== ROADMAP ===== */
+.roadmap {
+  position: relative;
+  padding-left: 40px;
+}
+.roadmap::before {
+  content: '';
+  position: absolute;
+  left: 11px; top: 8px; bottom: 8px;
+  width: 3px;
+  background: repeating-linear-gradient(180deg, var(--wood) 0, var(--wood) 12px, transparent 12px, transparent 20px);
+}
+.milestone {
+  position: relative;
+  margin-bottom: 28px;
+  background: var(--bark);
+  border: 2px solid var(--wood);
+  padding: 18px 20px;
+  box-shadow: 3px 3px 0 var(--soil);
+  animation: fadeUp 0.5s ease both;
+}
+.milestone::before {
+  content: '';
+  position: absolute;
+  left: -36px; top: 50%;
+  transform: translateY(-50%);
+  width: 18px; height: 18px;
+  background: var(--wood);
+  border: 3px solid var(--straw);
+  box-shadow: 2px 2px 0 var(--soil);
+}
+.milestone.done::before { background: var(--grass); border-color: var(--gold); }
+.milestone.done { border-color: var(--grass); }
+.ms-week { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--straw); margin-bottom: 6px; }
+.ms-goal { font-size: 16px; color: var(--cream); font-weight: 600; margin-bottom: 4px; }
+.ms-result { font-size: 13px; color: var(--smoke); }
+.ms-check { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-size: 1.4rem; }
+
+/* ===== FOOTER ===== */
+footer {
+  background: var(--ink);
+  border-top: 3px solid var(--wood);
+  text-align: center;
+  padding: 48px 24px;
+}
+.footer-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(1.2rem, 4vw, 2rem);
+  color: var(--gold);
+  text-shadow: 3px 3px 0 var(--bark);
+  margin-bottom: 12px;
+}
+.footer-sub {
+  font-size: 16px;
+  color: var(--smoke);
+  margin-bottom: 32px;
+}
+.footer-links {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.footer-link {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  padding: 12px 20px;
+  text-decoration: none;
+  background: var(--bark);
+  border: 2px solid var(--wood);
+  color: var(--smoke);
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.5);
+  transition: all 0.15s;
+  letter-spacing: 1px;
+}
+.footer-link:hover { border-color: var(--straw); color: var(--gold); transform: translate(-1px,-1px); }
+
+.made-in {
+  margin-top: 40px;
+  font-size: 13px;
+  color: var(--wood);
+  letter-spacing: 2px;
+}
+
+/* ===== DIVIDER ===== */
+.px-divider {
+  width: 100%;
+  height: 4px;
+  background: repeating-linear-gradient(90deg,
+    var(--soil) 0, var(--soil) 4px,
+    var(--bark) 4px, var(--bark) 8px,
+    var(--wood) 8px, var(--wood) 12px,
+    var(--bark) 12px, var(--bark) 16px
+  );
+}
+
+/* ===== SCROLL ANIMATIONS ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ===== NAV ===== */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: rgba(26,10,2,0.92);
+  backdrop-filter: blur(4px);
+  border-bottom: 2px solid var(--wood);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.nav-logo {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  color: var(--gold);
+  text-decoration: none;
+  text-shadow: 2px 2px 0 var(--bark);
+  letter-spacing: 2px;
+}
+.nav-links {
+  display: flex;
+  gap: 4px;
+  list-style: none;
+  flex-wrap: wrap;
+}
+.nav-links a {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: var(--smoke);
+  text-decoration: none;
+  padding: 6px 10px;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+  letter-spacing: 1px;
+}
+.nav-links a:hover { color: var(--gold); border-color: var(--wood); }
+
+@media (max-width: 500px) {
+  .nav-links { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">🏘 ХАТИНГРАД</a>
+  <ul class="nav-links">
+    <li><a href="#mechanics">Механіки</a></li>
+    <li><a href="#resources">Ресурси</a></li>
+    <li><a href="#buildings">Будівлі</a></li>
+    <li><a href="#architecture">Архітектура</a></li>
+    <li><a href="#roadmap">Дорожня карта</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div id="hero">
+  <!-- Stars -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Clouds -->
+  <div class="clouds">
+    <div class="cloud" style="width:60px;height:16px;top:10px;left:10%;animation:drift 30s linear infinite;border-radius:8px;"></div>
+    <div class="cloud" style="width:90px;height:20px;top:30px;left:40%;animation:drift 45s linear infinite;border-radius:10px;opacity:0.4;"></div>
+    <div class="cloud" style="width:50px;height:14px;top:5px;left:70%;animation:drift 35s linear infinite;border-radius:7px;"></div>
+  </div>
+  <style>
+    @keyframes drift { from { transform: translateX(0); } to { transform: translateX(110vw); } }
+  </style>
+
+  <!-- Skyline silhouette -->
+  <div class="skyline">
+    <!-- Church/Tower -->
+    <div class="building-sil" style="width:40px;height:180px;margin-right:2px;">
+      <div style="position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:16px;height:60px;background:var(--ink);"></div>
+      <div style="position:absolute;top:-90px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:32px solid var(--ink);"></div>
+      <div class="win" style="width:8px;height:10px;top:20px;left:8px;"></div>
+      <div class="win" style="width:8px;height:10px;top:20px;right:8px;animation-delay:0.7s;"></div>
+      <div class="win" style="width:8px;height:10px;top:50px;left:16px;animation-delay:1.5s;"></div>
+    </div>
+    <!-- House 1 -->
+    <div class="building-sil" style="width:80px;height:100px;margin-right:4px;">
+      <div style="position:absolute;top:-40px;left:0;right:0;height:0;border-left:0 solid transparent;border-right:80px solid transparent;border-bottom:40px solid var(--ink);"></div>
+      <div class="win" style="width:12px;height:14px;top:15px;left:14px;animation-delay:0.3s;"></div>
+      <div class="win" style="width:12px;height:14px;top:15px;right:14px;animation-delay:1.1s;"></div>
+      <div class="smoke-puff"></div><div class="smoke-puff"></div><div class="smoke-puff"></div>
+    </div>
+    <!-- Mine/big building -->
+    <div class="building-sil" style="width:60px;height:140px;margin-right:2px;">
+      <div class="win" style="width:10px;height:12px;top:18px;left:10px;animation-delay:0.5s;"></div>
+      <div class="win" style="width:10px;height:12px;top:18px;right:10px;animation-delay:1.8s;"></div>
+      <div class="win" style="width:10px;height:12px;top:48px;left:10px;animation-delay:0.9s;"></div>
+      <div class="win" style="width:10px;height:12px;top:48px;right:10px;animation-delay:2.1s;"></div>
+    </div>
+    <!-- House 2 -->
+    <div class="building-sil" style="width:70px;height:90px;margin-right:4px;">
+      <div style="position:absolute;top:-35px;left:0;right:0;height:0;border-left:35px solid transparent;border-right:35px solid transparent;border-bottom:35px solid var(--ink);"></div>
+      <div class="win" style="width:10px;height:12px;top:16px;left:15px;animation-delay:1.3s;"></div>
+      <div class="win" style="width:10px;height:12px;top:16px;right:15px;animation-delay:0.2s;"></div>
+    </div>
+    <!-- Tall tower right -->
+    <div class="building-sil" style="width:36px;height:200px;margin-right:2px;">
+      <div style="position:absolute;top:-20px;left:0;right:0;height:20px;background:var(--ink);"></div>
+      <div class="win" style="width:8px;height:10px;top:25px;left:14px;animation-delay:0.6s;"></div>
+      <div class="win" style="width:8px;height:10px;top:60px;left:14px;animation-delay:1.4s;"></div>
+      <div class="win" style="width:8px;height:10px;top:95px;left:14px;animation-delay:2.2s;"></div>
+    </div>
+    <!-- House 3 -->
+    <div class="building-sil" style="width:90px;height:80px;">
+      <div style="position:absolute;top:-38px;left:0;right:0;height:0;border-left:0 solid transparent;border-right:90px solid transparent;border-bottom:38px solid var(--ink);"></div>
+      <div class="win" style="width:12px;height:14px;top:12px;left:18px;animation-delay:1.7s;"></div>
+      <div class="win" style="width:12px;height:14px;top:12px;right:18px;animation-delay:0.4s;"></div>
+      <div class="smoke-puff" style="left:30%;"></div><div class="smoke-puff" style="left:60%;animation-delay:2s;"></div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="hero-content">
+    <h1 class="hero-title">🏘 ХАТИНГРАД</h1>
+    <p class="hero-sub">Від маленької хатинки — до великого граду!</p>
+    <div class="hero-badges">
+      <div class="badge">📱 ANDROID + IOS</div>
+      <div class="badge">🎮 TOP-DOWN</div>
+      <div class="badge">⚙ UNITY 2022</div>
+      <div class="badge">🇺🇦 УКРАЇНСЬКА ГРА</div>
+    </div>
+    <a href="#mechanics" class="cta-btn">▶ ДІЗНАТИСЬ БІЛЬШЕ</a>
+  </div>
+
+  <div class="scroll-hint">▼ ГОРТАЙ ВНИЗ ▼</div>
+</div>
+
+<div class="px-divider"></div>
+
+<!-- MECHANICS -->
+<section id="mechanics">
+  <h2 class="section-title reveal">⚙ МЕХАНІКИ</h2>
+  <div class="mechanics">
+    <div class="mechanic-card reveal" style="animation-delay:0.1s">
+      <span class="mechanic-icon">⛏</span>
+      <div class="mechanic-title">ВИДОБУТОК</div>
+      <p class="mechanic-desc">Тапай по деревах, каменях і рудних жилах. Кожен ресурс — це цеглина у фундаменті твого міста.</p>
+    </div>
+    <div class="mechanic-card reveal" style="animation-delay:0.2s">
+      <span class="mechanic-icon">🏗</span>
+      <div class="mechanic-title">БУДІВНИЦТВО</div>
+      <p class="mechanic-desc">Вибери будівлю з панелі — тапни по вільній клітинці. Місто росте тайл за тайлом.</p>
+    </div>
+    <div class="mechanic-card reveal" style="animation-delay:0.3s">
+      <span class="mechanic-icon">📅</span>
+      <div class="mechanic-title">ДЕННИЙ ЦИКЛ</div>
+      <p class="mechanic-desc">Удень збирай ресурси. Вночі — будівлі автоматично виробляють ресурси та населення споживає їжу.</p>
+    </div>
+    <div class="mechanic-card reveal" style="animation-delay:0.4s">
+      <span class="mechanic-icon">👷</span>
+      <div class="mechanic-title">НАСЕЛЕННЯ</div>
+      <p class="mechanic-desc">Будуй хати — зростає ліміт жителів. Будуй ферми — годуй їх. Більше людей = швидший розвиток.</p>
+    </div>
+    <div class="mechanic-card reveal" style="animation-delay:0.5s">
+      <span class="mechanic-icon">🗺</span>
+      <div class="mechanic-title">РАНДОМНА КАРТА</div>
+      <p class="mechanic-desc">Кожна гра — унікальна. Процедурно генерований світ: ліси, річки, гори, рудні поклади.</p>
+    </div>
+    <div class="mechanic-card reveal" style="animation-delay:0.6s">
+      <span class="mechanic-icon">🏆</span>
+      <div class="mechanic-title">МЕТА</div>
+      <p class="mechanic-desc">Збудуй Ратушу — відкрий технології. Збудуй усе — досягни рівня «Велике Місто»!</p>
+    </div>
+  </div>
+</section>
+
+<div class="px-divider"></div>
+
+<!-- RESOURCES -->
+<section id="resources">
+  <h2 class="section-title reveal">🪵 РЕСУРСИ</h2>
+  <div class="res-grid">
+    <div class="res-card reveal">
+      <span class="res-emoji">🪵</span>
+      <div class="res-name">ДЕРЕВО</div>
+      <div class="res-src">Рубка лісу, Лісопилка</div>
+      <div class="res-use">→ Хати, паркани, базові будівлі</div>
+    </div>
+    <div class="res-card reveal">
+      <span class="res-emoji">🪨</span>
+      <div class="res-name">КАМІНЬ</div>
+      <div class="res-src">Шахта, Скелі на карті</div>
+      <div class="res-use">→ Мури, вежі, дороги</div>
+    </div>
+    <div class="res-card reveal">
+      <span class="res-emoji">🌾</span>
+      <div class="res-name">ЇЖА</div>
+      <div class="res-src">Ферма, дикорослі рослини</div>
+      <div class="res-use">→ Утримання населення</div>
+    </div>
+    <div class="res-card reveal">
+      <span class="res-emoji">🔩</span>
+      <div class="res-name">ЗАЛІЗО</div>
+      <div class="res-src">Залізна руда, Кузня</div>
+      <div class="res-use">→ Пізні будівлі, покращення</div>
+    </div>
+    <div class="res-card reveal">
+      <span class="res-emoji">🌿</span>
+      <div class="res-name">ТРАВИ</div>
+      <div class="res-src">Луки, Аптека</div>
+      <div class="res-use">→ Зілля, торгівля</div>
+    </div>
+    <div class="res-card reveal">
+      <span class="res-emoji">💎</span>
+      <div class="res-name">САМОЦВІТИ</div>
+      <div class="res-src">Рідкісні жили (рандом)</div>
+      <div class="res-use">→ Преміум будівлі, ринок</div>
+    </div>
+  </div>
+</section>
+
+<div class="px-divider"></div>
+
+<!-- BUILDINGS -->
+<section id="buildings">
+  <h2 class="section-title reveal">🏛 БУДІВЛІ</h2>
+  <div class="buildings-grid">
+    <div class="bld-card reveal"><span class="bld-emoji">🏕</span><div class="bld-info"><div class="bld-name">НАМЕТ</div><div class="bld-cost">— (стартова)</div><div class="bld-effect">Базовий притулок</div></div></div>
+    <div class="bld-card reveal"><span class="bld-emoji">🏠</span><div class="bld-info"><div class="bld-name">ХАТА</div><div class="bld-cost">🪵×5 🪨×2</div><div class="bld-effect">+5 макс. населення</div></div></div>
+    <div class="bld-card reveal"><span class="bld-emoji">⛏</span><div class="bld-info"><div class="bld-name">ШАХТА</div><div class="bld-cost">🪵×8 🪨×5</div><div class="bld-effect">+1 камінь / день</div></div></div>
+    <div class="bld-card reveal"><span class="bld-emoji">🌾</span><div class="bld-info"><div class="bld-name">ФЕРМА</div><div class="bld-cost">🪵×6</div><div class="bld-effect">+2 їжі / день</div></div></div>
+    <div class="bld-card reveal"><span class="bld-emoji">🪵</span><div class="bld-info"><div class="bld-name">ЛІСОПИЛКА</div><div class="bld-cost">🪵×4 🪨×3</div><div class="bld-effect">+1 дерево / день</div></div></div>
+    <div class="bld-card reveal"><span class="bld-emoji">🔥</span><div class="bld-info"><div class="bld-name">КУЗНЯ</div><div class="bld-cost">🪵×6 🪨×8</div><div class="bld-effect">+1 залізо / день</div></div></div>
+    <div class="bld-card reveal"><span class="bld-emoji">🏪</span><div class="bld-info"><div class="bld-name">РИНОК</div><div class="bld-cost">🪵×10 🔩×3</div><div class="bld-effect">Обмін ресурсами</div></div></div>
+    <div class="bld-card reveal"><span class="bld-emoji">🗼</span><div class="bld-info"><div class="bld-name">ВЕЖА</div><div class="bld-cost">🪨×12 🔩×5</div><div class="bld-effect">Захист від ворогів</div></div></div>
+    <div class="bld-card reveal"><span class="bld-emoji">🏰</span><div class="bld-info"><div class="bld-name">ФОРТЕЦЯ</div><div class="bld-cost">🪵×15 🪨×20 🔩×5</div><div class="bld-effect">+20 населення, захист</div></div></div>
+    <div class="bld-card final reveal"><span class="bld-emoji">🏛</span><div class="bld-info"><div class="bld-name">★ РАТУША ★</div><div class="bld-cost">🪵×20 🪨×30 🔩×10</div><div class="bld-effect">Перемога! Нові технології</div></div></div>
+  </div>
+</section>
+
+<div class="px-divider"></div>
+
+<!-- ARCHITECTURE -->
+<section id="architecture">
+  <h2 class="section-title reveal">⚙ АРХІТЕКТУРА</h2>
+  <div class="arch-cols reveal">
+    <div>
+      <h3 style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--straw);margin-bottom:16px;letter-spacing:1px;">📁 СТРУКТУРА ПРОЄКТУ</h3>
+      <div class="folder-tree">
+        <div class="dir">📁 Хатинград/</div>
+        <div class="sub dir">📁 Assets/</div>
+        <div class="sub sub dir">📁 Scripts/</div>
+        <div class="sub sub file">📄 Core/</div>
+        <div class="sub sub file">📄 Buildings/</div>
+        <div class="sub sub file">📄 Systems/</div>
+        <div class="sub sub file">📄 UI/</div>
+        <div class="sub sub dir">📁 ScriptableObjects/</div>
+        <div class="sub sub dir">📁 Prefabs/</div>
+        <div class="sub sub dir">📁 Sprites/</div>
+        <div class="sub sub dir">📁 Scenes/</div>
+        <div class="sub sub dir">📁 Audio/</div>
+        <div class="sub dir">📁 docs/</div>
+        <div class="sub file">📄 GameDesign.docx</div>
+        <div class="sub file">📄 README.md</div>
+      </div>
+    </div>
+    <div>
+      <h3 style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--straw);margin-bottom:16px;letter-spacing:1px;">🧩 КЛЮЧОВІ СКРИПТИ</h3>
+      <div class="scripts-list">
+        <div class="script-row"><span class="script-name">GameManager</span><span class="script-desc">Стан гри, singleton</span></div>
+        <div class="script-row"><span class="script-name">ResourceManager</span><span class="script-desc">Всі ресурси, події</span></div>
+        <div class="script-row"><span class="script-name">GridSystem</span><span class="script-desc">Тайлова сітка, raycast</span></div>
+        <div class="script-row"><span class="script-name">BuildingManager</span><span class="script-desc">Реєстр будівель</span></div>
+        <div class="script-row"><span class="script-name">DayNightCycle</span><span class="script-desc">Денний цикл</span></div>
+        <div class="script-row"><span class="script-name">CameraController</span><span class="script-desc">Pan + pinch zoom</span></div>
+        <div class="script-row"><span class="script-name">UIManager</span><span class="script-desc">HUD, панелі</span></div>
+        <div class="script-row"><span class="script-name">SaveSystem</span><span class="script-desc">JSON збереження</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="px-divider"></div>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <h2 class="section-title reveal">🗺 ДОРОЖНЯ КАРТА</h2>
+  <div class="roadmap">
+    <div class="milestone done reveal">
+      <div class="ms-week">ТИЖДЕНЬ 0</div>
+      <div class="ms-goal">📄 Дизайн-документ та архітектура</div>
+      <div class="ms-result">Детальний план готовий</div>
+      <span class="ms-check">✅</span>
+    </div>
+    <div class="milestone reveal">
+      <div class="ms-week">ТИЖДЕНЬ 1</div>
+      <div class="ms-goal">🗺 Прототип: сітка, тапи, камера</div>
+      <div class="ms-result">Видобуток ресурсів + рух камери</div>
+      <span class="ms-check">⬜</span>
+    </div>
+    <div class="milestone reveal">
+      <div class="ms-week">ТИЖДЕНЬ 2</div>
+      <div class="ms-goal">🏠 Перші будівлі + HUD</div>
+      <div class="ms-result">Хата, Шахта, Ферма + UI ресурсів</div>
+      <span class="ms-check">⬜</span>
+    </div>
+    <div class="milestone reveal">
+      <div class="ms-week">ТИЖДЕНЬ 3</div>
+      <div class="ms-goal">📅 Виробництво + день/ніч</div>
+      <div class="ms-result">Авто-ресурси, цикл, населення</div>
+      <span class="ms-check">⬜</span>
+    </div>
+    <div class="milestone reveal">
+      <div class="ms-week">ТИЖДЕНЬ 4</div>
+      <div class="ms-goal">🏛 Всі будівлі + збереження</div>
+      <div class="ms-result">Повна система + SaveSystem</div>
+      <span class="ms-check">⬜</span>
+    </div>
+    <div class="milestone reveal">
+      <div class="ms-week">ТИЖДЕНЬ 5</div>
+      <div class="ms-goal">🎵 Баланс + звук + анімації</div>
+      <div class="ms-result">Тестування, polish, аудіо</div>
+      <span class="ms-check">⬜</span>
+    </div>
+    <div class="milestone reveal">
+      <div class="ms-week">ТИЖДЕНЬ 6</div>
+      <div class="ms-goal">🚀 Build + публікація</div>
+      <div class="ms-result">APK / IPA → Google Play / App Store</div>
+      <span class="ms-check">⬜</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="px-divider"></div>
+<footer>
+  <div class="footer-title">🏘 ХАТИНГРАД</div>
+  <p class="footer-sub">Збудуй своє місто. Крапля за краплею, цегла за цеглою.</p>
+  <div class="footer-links">
+    <a href="#" class="footer-link">⭐ GITHUB</a>
+    <a href="docs/Хатинград_GameDesign.docx" class="footer-link">📄 ДИЗАЙН-ДОК</a>
+    <a href="#mechanics" class="footer-link">🎮 МЕХАНІКИ</a>
+    <a href="#roadmap" class="footer-link">🗺 ПЛАН</a>
+  </div>
+  <p class="made-in">Зроблено з ❤️ в Україні • Unity 2022 LTS</p>
+</footer>
+
+<script>
+// Generate stars
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 80; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*60}%;animation-delay:${Math.random()*3}s;animation-duration:${1.5+Math.random()*2}s`;
+  starsEl.appendChild(s);
+}
+
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Nav hide on hero, show after
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('nav');
+  nav.style.opacity = window.scrollY > 80 ? '1' : '0.4';
+});
+</script>
+</body>
+</html>
