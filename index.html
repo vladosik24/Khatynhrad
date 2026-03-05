@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>🏘 Хатинград</title>
+
+<!-- ═══ PWA ═══ -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2c1a08">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Хатинград">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -782,6 +793,34 @@ function checkOri(){
 window.addEventListener('resize',()=>{if(running){resizeCv();clampCam();}checkOri();});
 window.addEventListener('orientationchange',()=>setTimeout(checkOri,300));
 checkOri();
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// PWA — реєстрація Service Worker
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => {
+        console.log('[PWA] Service Worker зареєстровано!');
+        reg.addEventListener('updatefound', () => {
+          const nw = reg.installing;
+          nw.addEventListener('statechange', () => {
+            if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+              showUpdateBanner();
+            }
+          });
+        });
+      })
+      .catch(err => console.warn('[PWA] Помилка SW:', err));
+  });
+}
+
+function showUpdateBanner() {
+  const b = document.createElement('div');
+  b.style.cssText = 'position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#2c1a08;border:2px solid #FFD700;border-radius:12px;padding:10px 20px;z-index:9999;display:flex;gap:12px;align-items:center;font-family:Lilita One,cursive;font-size:.85rem;color:#FFD700;box-shadow:0 4px 20px rgba(0,0,0,.5);';
+  b.innerHTML = '<span>🆕 Доступне оновлення!</span><button onclick="location.reload()" style="background:#27ae60;color:white;border:none;border-radius:8px;padding:6px 14px;cursor:pointer;font-family:inherit;">Оновити</button>';
+  document.body.appendChild(b);
+}
 </script>
 </body>
 </html>
