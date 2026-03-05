@@ -2,750 +2,657 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>🏘 Хатинград</title>
 <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --gold:#FFD700;--gold2:#FFA500;--dark-gold:#b8860b;--deep-gold:#8B6914;
-  --cream:#fffbe6;--ink:#1a1208;--red:#c0392b;--green:#27ae60;
-  --panel-dark:#2c1a08;--panel-mid:#3d2510;--panel-light:#5a3a18;
-  --border-gold:rgba(255,180,0,.55);
+  --gold:#FFD700;--gold2:#FFA500;--dk-gold:#b8860b;--dkk-gold:#7a5500;
+  --panel:#2c1a08;--panel2:#3d2510;--panel3:#5a3518;
+  --cream:#fffbe6;--ink:#1a1208;
+  --gborder:rgba(255,180,0,.5);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif;background:#1a3a1a;}
 
-/* ==============================
-   LANDING
-   ============================== */
+/* ===== LANDING ===== */
 #landing{
   position:fixed;inset:0;z-index:100;overflow:hidden;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  transition:opacity .5s ease,transform .5s ease;
-  background:linear-gradient(170deg,#87ceeb 0%,#4ab8ff 40%,#3aaf55 60%,#2d8a2d 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;
+  transition:opacity .5s,transform .5s;
 }
-#landing.hide{opacity:0;transform:scale(1.06);pointer-events:none;}
+#landing.hide{opacity:0;transform:scale(1.05);pointer-events:none;}
+.lbg{position:absolute;inset:0;background:linear-gradient(175deg,#1a4a8a 0%,#3a9ae8 35%,#7ad4ff 58%,#5cb85c 58%,#3a8a3a 100%);}
 
-/* Parallax sky layers */
-.land-sky{position:absolute;inset:0;background:linear-gradient(180deg,#1a4a8a 0%,#3a9ae8 35%,#7ad4ff 60%,#a8e8ff 75%,#5cb85c 75%,#3a8a3a 100%);}
+/* clouds */
+.lcloud{position:absolute;background:rgba(255,255,255,.88);border-radius:60px;filter:blur(1px);}
+.lcloud::before,.lcloud::after{content:'';position:absolute;background:inherit;border-radius:50%;filter:inherit;}
+.lcloud::before{width:55%;height:140%;top:-55%;left:18%;}
+.lcloud::after{width:42%;height:115%;top:-35%;right:12%;}
 
-/* Animated clouds */
-.cloud{position:absolute;background:rgba(255,255,255,.9);border-radius:50px;filter:blur(2px);}
-.cloud::before,.cloud::after{content:'';position:absolute;background:inherit;border-radius:50%;filter:inherit;}
-.cloud::before{width:60%;height:130%;top:-50%;left:15%;}
-.cloud::after{width:45%;height:110%;top:-30%;right:10%;}
-@keyframes cloudDrift{from{transform:translateX(-300px)}to{transform:translateX(110vw)}}
+/* ground */
+.lground{position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(180deg,#4eaa4e,#2d6e2d);}
+.lground::before{content:'';position:absolute;top:0;left:0;right:0;height:14px;background:linear-gradient(180deg,#72cc72,#4eaa4e);}
 
-/* Ground & trees */
-.ground-row{position:absolute;bottom:0;left:0;right:0;height:38%;background:linear-gradient(180deg,#4a9e4a,#2d6e2d);overflow:hidden;}
-.ground-row::before{content:'';position:absolute;top:0;left:0;right:0;height:12px;background:linear-gradient(180deg,#6abb6a,#4a9e4a);border-radius:0 0 50% 50%/0 0 8px 8px;}
+/* trees */
+.ltrees{position:absolute;bottom:36%;left:0;right:0;display:flex;justify-content:space-around;padding:0 3%;pointer-events:none;}
+.ltree{font-size:clamp(2.4rem,5.5vw,5rem);filter:drop-shadow(2px 5px 4px rgba(0,0,0,.35));animation:tsway 2.8s ease-in-out infinite alternate;}
+.ltree:nth-child(2n){animation-delay:.7s;animation-duration:3.4s;}
+.ltree:nth-child(3n){animation-delay:1.3s;animation-duration:2.5s;}
+@keyframes tsway{from{transform:rotate(-4deg)}to{transform:rotate(4deg)}}
 
-.tree-row{position:absolute;bottom:32%;left:0;right:0;display:flex;justify-content:space-around;padding:0 40px;pointer-events:none;}
-.land-tree{font-size:clamp(2.5rem,6vw,5rem);filter:drop-shadow(2px 4px 6px rgba(0,0,0,.3));animation:treeSway 2.5s ease-in-out infinite alternate;}
-.land-tree:nth-child(2n){animation-delay:.6s;animation-duration:3.2s;}
-.land-tree:nth-child(3n){animation-delay:1.1s;animation-duration:2.8s;}
-@keyframes treeSway{from{transform:rotate(-4deg) scale(1)}to{transform:rotate(4deg) scale(1.03)}}
+/* title board */
+.lwrap{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.8vh,18px);padding:0 16px;}
+.lboard{
+  background:linear-gradient(160deg,#fffde7,#ffe566);
+  border:4px solid var(--gold2);border-radius:20px;
+  padding:clamp(8px,2vw,22px) clamp(18px,5vw,56px);
+  box-shadow:0 6px 0 var(--dk-gold),0 10px 0 var(--dkk-gold),0 18px 40px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.7);
+  text-align:center;animation:lbfloat 3.2s ease-in-out infinite;position:relative;
+}
+@keyframes lbfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.lboard::before,.lboard::after{content:'';position:absolute;top:8px;bottom:8px;width:5px;background:linear-gradient(180deg,var(--gold),var(--dk-gold));border-radius:3px;}
+.lboard::before{left:7px;}.lboard::after{right:7px;}
+.ltitle{
+  font-family:'Lilita One',cursive;font-size:clamp(2rem,7.5vw,5.5rem);line-height:1;letter-spacing:3px;
+  background:linear-gradient(180deg,#7a3500,#c06000,#7a3500);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(2px 3px 0 rgba(0,0,0,.15));
+}
+.lsub{font-size:clamp(.75rem,2vw,1.05rem);color:#7a4400;font-weight:900;letter-spacing:1px;margin-top:4px;}
 
-/* Title section */
-.title-wrap{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;gap:clamp(10px,2vh,20px);padding:0 20px;}
+.lfeats{display:flex;gap:clamp(4px,1vw,10px);flex-wrap:wrap;justify-content:center;}
+.lfeat{background:rgba(255,255,255,.88);border:2px solid rgba(255,180,0,.5);border-radius:40px;padding:4px 13px;font-size:clamp(.62rem,1.4vw,.82rem);font-weight:900;color:#5a3000;box-shadow:0 2px 0 rgba(180,120,0,.3);white-space:nowrap;}
 
-.main-board{
-  background:linear-gradient(165deg,#fffde7 0%,#fff3a0 50%,#ffe066 100%);
-  border:4px solid var(--gold2);
-  border-radius:20px;
-  padding:clamp(10px,2.5vw,24px) clamp(20px,5vw,60px);
-  box-shadow:0 6px 0 var(--dark-gold),0 10px 0 var(--deep-gold),0 16px 40px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.8);
-  text-align:center;
-  animation:boardFloat 3s ease-in-out infinite;
+/* play button */
+.lplaywrap{display:flex;flex-direction:column;align-items:center;gap:9px;}
+.lplay{
+  font-family:'Lilita One',cursive;font-size:clamp(1.25rem,3.5vw,2rem);
+  padding:clamp(11px,2vh,19px) clamp(32px,7vw,76px);
+  background:linear-gradient(180deg,#7ae05c 0%,#34b520 48%,#238010 100%);
+  color:#fff;border:3px solid rgba(255,255,255,.28);border-radius:50px;cursor:pointer;
+  letter-spacing:2px;
+  box-shadow:0 5px 0 #1a5a10,0 8px 0 rgba(0,0,0,.28),0 14px 28px rgba(0,0,0,.3);
+  transition:transform .08s,box-shadow .08s;
+  position:relative;overflow:hidden;display:flex;align-items:center;gap:12px;
+  text-shadow:1px 2px 0 rgba(0,0,0,.28);
+}
+.lplay::before{content:'';position:absolute;top:0;left:0;right:0;height:46%;background:linear-gradient(180deg,rgba(255,255,255,.28),transparent);border-radius:50px 50px 40% 40%;}
+.lplay:hover{transform:translateY(-3px);box-shadow:0 8px 0 #1a5a10,0 12px 0 rgba(0,0,0,.28),0 20px 36px rgba(0,0,0,.38);}
+.lplay:active{transform:translateY(4px);box-shadow:0 1px 0 #1a5a10,0 3px 10px rgba(0,0,0,.28);}
+.lpemoji{font-size:clamp(1.5rem,4vw,2.4rem);filter:drop-shadow(1px 2px 0 rgba(0,0,0,.28));}
+.lsubbts{display:flex;gap:9px;}
+.lsub-bt{font-family:'Lilita One',cursive;font-size:clamp(.65rem,1.6vw,.85rem);padding:7px 18px;border-radius:28px;border:2px solid rgba(255,255,255,.18);cursor:pointer;color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.28);transition:transform .08s;text-shadow:1px 1px 0 rgba(0,0,0,.28);}
+.lsub-bt:hover{transform:translateY(-2px);}
+.lsub-bt.blue{background:linear-gradient(180deg,#5bb8f5,#2980b9);box-shadow:0 3px 0 #1a5a8a;}
+.lsub-bt.orange{background:linear-gradient(180deg,#f0a050,#d07010);box-shadow:0 3px 0 #7a3800;}
+.lver{position:absolute;bottom:10px;font-size:.68rem;color:rgba(255,255,255,.45);font-weight:800;letter-spacing:1px;}
+
+/* ===== PORTRAIT WARNING ===== */
+#pwarn{display:none;position:fixed;inset:0;z-index:999;background:#150a00;align-items:center;justify-content:center;flex-direction:column;gap:18px;}
+#pwarn.on{display:flex;}
+.pwicon{font-size:5rem;animation:pwr 2s ease-in-out infinite;}
+@keyframes pwr{0%,100%{transform:rotate(0)}50%{transform:rotate(90deg)}}
+.pwtext{font-family:'Lilita One',cursive;font-size:1.35rem;color:var(--gold);text-align:center;padding:0 28px;line-height:1.6;}
+
+/* ===== GAME ===== */
+#game{position:fixed;inset:0;z-index:50;display:none;flex-direction:column;}
+#game.on{display:flex;}
+
+/* HUD top */
+#hud{
+  height:54px;flex-shrink:0;z-index:20;
+  background:linear-gradient(180deg,#2c1a08,#1a0c04);
+  border-bottom:3px solid var(--gold2);
+  display:flex;align-items:center;padding:0 8px;gap:5px;
   position:relative;
 }
-@keyframes boardFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-.main-board::before,.main-board::after{content:'';position:absolute;top:8px;bottom:8px;width:6px;background:linear-gradient(180deg,var(--gold),var(--dark-gold));border-radius:3px;}
-.main-board::before{left:8px;}
-.main-board::after{right:8px;}
+#hud::before,#hud::after{content:'⬡';font-size:.75rem;color:var(--gold);opacity:.5;flex-shrink:0;line-height:1;}
+.rpill{display:flex;align-items:center;gap:4px;background:rgba(0,0,0,.38);border:1.5px solid var(--gborder);border-radius:16px;padding:3px 9px;min-width:58px;}
+.ricon{font-size:1.15rem;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,.5));}
+.rval{font-family:'Lilita One',cursive;font-size:.88rem;color:var(--gold);text-shadow:1px 1px 0 rgba(0,0,0,.7);}
+.hbar{width:1px;height:30px;background:var(--gborder);flex-shrink:0;margin:0 2px;}
+.hday{font-family:'Lilita One',cursive;font-size:.88rem;color:var(--gold);background:rgba(0,0,0,.4);border:1.5px solid var(--gborder);border-radius:14px;padding:3px 11px;margin-left:auto;text-shadow:1px 1px 0 #000;}
+.hmenu{font-family:'Lilita One',cursive;font-size:.75rem;padding:6px 11px;background:linear-gradient(180deg,#e74c3c,#a93226);color:#fff;border:2px solid rgba(255,120,120,.25);border-radius:14px;cursor:pointer;box-shadow:0 3px 0 #7b1c1c;transition:transform .08s;text-shadow:1px 1px 0 rgba(0,0,0,.38);white-space:nowrap;flex-shrink:0;}
+.hmenu:hover{transform:translateY(-1px);}.hmenu:active{transform:translateY(2px);box-shadow:0 1px 0 #7b1c1c;}
 
-.game-logo{
-  font-family:'Lilita One',cursive;
-  font-size:clamp(2rem,7vw,5.5rem);
-  line-height:1;
-  background:linear-gradient(180deg,#5a2d00 0%,#8B4513 40%,#5a2d00 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  text-shadow:none;
-  filter:drop-shadow(2px 3px 0 rgba(0,0,0,.2));
-  letter-spacing:3px;
-}
-.game-tagline{font-size:clamp(.8rem,2vw,1.1rem);color:#7a4a00;font-weight:800;letter-spacing:1px;margin-top:4px;}
+/* Canvas */
+#cw{flex:1;overflow:hidden;position:relative;background:#2a6a2a;}
+canvas{display:block;cursor:crosshair;image-rendering:pixelated;}
 
-.feat-row{display:flex;gap:clamp(5px,1.2vw,12px);flex-wrap:wrap;justify-content:center;}
-.feat{
-  background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(240,240,200,.9));
-  border:2px solid rgba(255,180,0,.6);border-radius:40px;
-  padding:5px 14px;font-size:clamp(.65rem,1.5vw,.85rem);font-weight:900;color:#5a3000;
-  box-shadow:0 2px 0 rgba(200,140,0,.4);white-space:nowrap;
-}
+/* Floating bonus text */
+.ft{position:absolute;font-family:'Lilita One',cursive;font-size:1.05rem;
+  color:#fff;text-shadow:0 0 6px rgba(255,210,0,.9),1px 1px 0 #000;
+  pointer-events:none;animation:ftup .9s ease-out forwards;z-index:30;}
+@keyframes ftup{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-56px) scale(1.25)}}
 
-/* BIG PLAY BUTTON */
-.play-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;}
-.play-btn{
-  font-family:'Lilita One',cursive;
-  font-size:clamp(1.3rem,3.5vw,2rem);
-  padding:clamp(12px,2vh,20px) clamp(36px,7vw,80px);
-  background:linear-gradient(180deg,#7ae05c 0%,#3db52a 45%,#27871a 100%);
-  color:#fff;
-  border:3px solid rgba(255,255,255,.3);
-  border-radius:50px;cursor:pointer;
-  letter-spacing:2px;
-  box-shadow:0 5px 0 #1a5a10,0 8px 0 rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.3);
-  transition:transform .08s,box-shadow .08s;
-  position:relative;overflow:hidden;
-  text-shadow:1px 2px 0 rgba(0,0,0,.3);
-  display:flex;align-items:center;gap:14px;
-}
-.play-btn::before{content:'';position:absolute;top:0;left:0;right:0;height:48%;background:linear-gradient(180deg,rgba(255,255,255,.3),transparent);border-radius:50px 50px 40% 40%;}
-.play-btn:hover{transform:translateY(-3px);box-shadow:0 8px 0 #1a5a10,0 11px 0 rgba(0,0,0,.3),0 18px 40px rgba(0,0,0,.4);}
-.play-btn:active{transform:translateY(4px);box-shadow:0 1px 0 #1a5a10,0 3px 10px rgba(0,0,0,.3);}
-.play-emoji{font-size:clamp(1.6rem,4vw,2.4rem);filter:drop-shadow(1px 2px 0 rgba(0,0,0,.3));}
-
-.sub-btns{display:flex;gap:10px;}
-.sub-btn{font-family:'Lilita One',cursive;font-size:clamp(.7rem,1.8vw,.9rem);padding:8px 20px;border-radius:30px;border:2px solid rgba(255,255,255,.2);cursor:pointer;color:#fff;font-weight:900;box-shadow:0 3px 0 rgba(0,0,0,.3);transition:transform .08s;text-shadow:1px 1px 0 rgba(0,0,0,.3);}
-.sub-btn:hover{transform:translateY(-2px);}
-.sub-btn:active{transform:translateY(1px);}
-.sub-btn.blue{background:linear-gradient(180deg,#5bb8f5,#2980b9);box-shadow:0 3px 0 #1a5a8a;}
-.sub-btn.orange{background:linear-gradient(180deg,#f0a050,#e07818);box-shadow:0 3px 0 #8a4000;}
-
-.version-tag{position:absolute;bottom:10px;font-size:.7rem;color:rgba(255,255,255,.5);font-weight:800;letter-spacing:1px;}
-
-/* Portrait warning */
-#portrait-warn{display:none;position:fixed;inset:0;z-index:999;background:#1a0a00;align-items:center;justify-content:center;flex-direction:column;gap:20px;}
-#portrait-warn.show{display:flex;}
-.pw-icon{font-size:5rem;animation:rotHint 2s ease-in-out infinite;}
-@keyframes rotHint{0%,100%{transform:rotate(0)}50%{transform:rotate(90deg)}}
-.pw-text{font-family:'Lilita One',cursive;font-size:1.4rem;color:var(--gold);text-align:center;padding:0 30px;}
-
-/* ==============================
-   GAME
-   ============================== */
-#game{position:fixed;inset:0;z-index:50;display:none;flex-direction:column;}
-#game.active{display:flex;}
-
-/* HUD TOP */
-#hud{
-  height:52px;flex-shrink:0;
-  background:linear-gradient(180deg,var(--panel-dark),#1a0c04);
-  border-bottom:3px solid var(--gold2);
-  display:flex;align-items:center;padding:0 8px;gap:6px;
-  position:relative;z-index:20;
-}
-/* Decorative rivets */
-#hud::before,#hud::after{content:'';width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--gold),var(--dark-gold));border:1px solid var(--deep-gold);flex-shrink:0;}
-
-.res-pill{
-  display:flex;align-items:center;gap:5px;
-  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(0,0,0,.3));
-  border:1.5px solid var(--border-gold);border-radius:16px;
-  padding:4px 10px;min-width:64px;
-}
-.res-icon{font-size:1.2rem;line-height:1;}
-.res-val{font-family:'Lilita One',cursive;font-size:.9rem;color:var(--gold);text-shadow:1px 1px 0 rgba(0,0,0,.6);}
-
-.hud-sep{width:1px;height:32px;background:var(--border-gold);flex-shrink:0;margin:0 2px;}
-.hud-day{font-family:'Lilita One',cursive;font-size:.9rem;color:var(--gold);background:rgba(0,0,0,.4);border:1.5px solid var(--border-gold);border-radius:14px;padding:4px 12px;margin-left:auto;text-shadow:1px 1px 0 #000;}
-.hud-menu{font-family:'Lilita One',cursive;font-size:.8rem;padding:6px 12px;background:linear-gradient(180deg,#e74c3c,#a93226);color:#fff;border:2px solid rgba(255,100,100,.3);border-radius:16px;cursor:pointer;box-shadow:0 3px 0 #7b1c1c;transition:transform .08s;text-shadow:1px 1px 0 rgba(0,0,0,.4);white-space:nowrap;}
-.hud-menu:hover{transform:translateY(-1px);}
-.hud-menu:active{transform:translateY(2px);box-shadow:0 1px 0 #7b1c1c;}
-
-/* CANVAS */
-#cw{flex:1;overflow:hidden;position:relative;background:#2a5a2a;}
-canvas{display:block;cursor:crosshair;}
-
-/* Floating text */
-.ft{position:absolute;font-family:'Lilita One',cursive;font-size:1.05rem;color:#fff;text-shadow:1px 1px 0 #000,0 0 8px rgba(255,200,0,.8);pointer-events:none;animation:ftAnim .85s ease-out forwards;z-index:30;}
-@keyframes ftAnim{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-52px) scale(1.3)}}
-
-/* LOG */
-#glog{position:absolute;bottom:10px;right:10px;background:rgba(15,8,2,.8);border:2px solid var(--border-gold);border-radius:10px;padding:7px 12px;font-size:.75rem;max-width:250px;pointer-events:none;backdrop-filter:blur(4px);}
-#glog div{color:rgba(255,230,150,.6);line-height:1.6;}
+/* Log */
+#glog{position:absolute;bottom:10px;right:10px;background:rgba(12,6,0,.82);border:2px solid var(--gborder);border-radius:10px;padding:6px 11px;font-size:.72rem;max-width:240px;pointer-events:none;backdrop-filter:blur(4px);}
+#glog div{color:rgba(255,230,140,.55);line-height:1.65;}
 #glog div:last-child{color:var(--gold);font-weight:900;}
 
 /* Tooltip */
-#tip{position:absolute;background:rgba(20,10,2,.92);border:2px solid var(--gold2);border-radius:8px;padding:5px 12px;font-size:.75rem;color:var(--cream);pointer-events:none;display:none;font-weight:900;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.6);z-index:25;}
+#gtip{position:absolute;background:rgba(18,8,0,.9);border:2px solid var(--gold2);border-radius:8px;padding:4px 11px;font-size:.72rem;color:var(--cream);pointer-events:none;display:none;font-weight:900;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.55);z-index:25;}
 
-/* WIN */
-#win{display:none;position:absolute;inset:0;background:rgba(0,0,0,.75);z-index:40;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
-#win.show{display:flex;}
-.win-card{background:linear-gradient(155deg,#fffde7,#ffd060);border:5px solid var(--gold);border-radius:24px;padding:clamp(24px,4vw,48px) clamp(30px,6vw,70px);text-align:center;box-shadow:0 10px 0 var(--dark-gold),0 20px 60px rgba(0,0,0,.6);animation:popIn .5s cubic-bezier(.175,.885,.32,1.275);}
-@keyframes popIn{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
-.win-trophy{font-size:clamp(3rem,8vw,5rem);}
-.win-title{font-family:'Lilita One',cursive;font-size:clamp(1.8rem,5vw,3rem);color:var(--ink);text-shadow:2px 2px 0 var(--gold2);margin:8px 0;}
-.win-sub{font-size:clamp(.85rem,2vw,1.1rem);color:#6a3a00;font-weight:800;margin-bottom:20px;}
-.win-btn{font-family:'Lilita One',cursive;font-size:clamp(1rem,2.5vw,1.3rem);padding:12px 32px;background:linear-gradient(180deg,#7ae05c,#27871a);color:#fff;border:none;border-radius:40px;cursor:pointer;box-shadow:0 4px 0 #1a5a10;transition:transform .08s;}
-.win-btn:hover{transform:translateY(-2px);}
+/* Win screen */
+#gwin{display:none;position:absolute;inset:0;background:rgba(0,0,0,.78);z-index:40;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+#gwin.on{display:flex;}
+.wcard{background:linear-gradient(155deg,#fffde7,#ffd060);border:5px solid var(--gold);border-radius:24px;padding:clamp(22px,4vw,48px) clamp(28px,6vw,68px);text-align:center;box-shadow:0 10px 0 var(--dk-gold),0 20px 60px rgba(0,0,0,.6);animation:popin .48s cubic-bezier(.175,.885,.32,1.275);}
+@keyframes popin{from{transform:scale(.35);opacity:0}to{transform:scale(1);opacity:1}}
+.wtrophy{font-size:clamp(3rem,8vw,5.5rem);}
+.wtitle{font-family:'Lilita One',cursive;font-size:clamp(1.7rem,5vw,3rem);color:var(--ink);text-shadow:2px 2px 0 var(--gold2);margin:8px 0 4px;}
+.wsub{font-size:clamp(.8rem,2vw,1.05rem);color:#6a3a00;font-weight:800;margin-bottom:18px;}
+.wbtn{font-family:'Lilita One',cursive;font-size:clamp(.95rem,2.5vw,1.25rem);padding:11px 30px;background:linear-gradient(180deg,#7ae05c,#238010);color:#fff;border:none;border-radius:40px;cursor:pointer;box-shadow:0 4px 0 #1a5a10;transition:transform .08s;}
+.wbtn:hover{transform:translateY(-2px);}
 
-/* BOTTOM BUILD PANEL */
+/* Bottom panel */
 #panel{
-  height:90px;flex-shrink:0;
-  background:linear-gradient(180deg,var(--panel-mid),var(--panel-dark));
+  height:90px;flex-shrink:0;z-index:20;
+  background:linear-gradient(180deg,var(--panel2),var(--panel));
   border-top:3px solid var(--gold2);
-  display:flex;align-items:center;padding:0 6px;gap:5px;
+  display:flex;align-items:center;padding:0 5px;gap:4px;
   overflow-x:auto;overflow-y:hidden;
-  position:relative;z-index:20;
 }
 #panel::-webkit-scrollbar{height:3px;}
 #panel::-webkit-scrollbar-thumb{background:var(--gold2);border-radius:2px;}
 
-.psec{display:flex;align-items:center;gap:5px;flex-shrink:0;}
-.plabel{font-family:'Lilita One',cursive;font-size:.58rem;color:rgba(255,200,50,.55);writing-mode:vertical-rl;transform:rotate(180deg);letter-spacing:1px;padding:0 1px;flex-shrink:0;}
-.psep{width:2px;height:64px;background:linear-gradient(180deg,transparent,var(--border-gold),transparent);flex-shrink:0;margin:0 3px;}
+.psec{display:flex;align-items:center;gap:4px;flex-shrink:0;}
+.plbl{font-family:'Lilita One',cursive;font-size:.55rem;color:rgba(255,200,60,.5);writing-mode:vertical-rl;transform:rotate(180deg);letter-spacing:1px;flex-shrink:0;padding:0 1px;}
+.psep{width:2px;height:62px;background:linear-gradient(180deg,transparent,var(--gborder),transparent);flex-shrink:0;margin:0 3px;}
 
-/* Tool button */
-.tbtn{display:flex;flex-direction:column;align-items:center;justify-content:center;width:58px;height:76px;background:linear-gradient(180deg,#1e3a5a,#0d1f3a);border:2px solid rgba(80,140,255,.35);border-radius:10px;cursor:pointer;gap:3px;box-shadow:0 3px 0 rgba(0,0,0,.5);transition:transform .08s,border-color .1s;flex-shrink:0;}
+.tbtn{display:flex;flex-direction:column;align-items:center;justify-content:center;width:56px;height:76px;background:linear-gradient(180deg,#1e3a5a,#0d1e38);border:2px solid rgba(80,140,255,.32);border-radius:10px;cursor:pointer;gap:3px;box-shadow:0 3px 0 rgba(0,0,0,.5);transition:transform .08s,border-color .12s;flex-shrink:0;}
 .tbtn:hover{transform:translateY(-3px);border-color:#64aaff;}
-.tbtn:active{transform:translateY(1px);}
-.tbtn.active{border-color:#64aaff;background:linear-gradient(180deg,#2a4a7a,#152a5a);box-shadow:0 3px 12px rgba(80,160,255,.4);}
-.ticon{font-size:1.55rem;line-height:1;}
-.tname{font-family:'Lilita One',cursive;font-size:.48rem;color:#88bbff;letter-spacing:.5px;text-align:center;}
+.tbtn.on{border-color:#64aaff;background:linear-gradient(180deg,#2a4a7a,#152a58);box-shadow:0 3px 12px rgba(80,160,255,.38);}
+.ticon{font-size:1.52rem;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,.4));}
+.tname{font-family:'Lilita One',cursive;font-size:.46rem;color:#88bbff;letter-spacing:.4px;}
 
-/* Build button */
-.bbtn{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  width:72px;height:76px;flex-shrink:0;
-  background:linear-gradient(180deg,var(--panel-light),var(--panel-mid));
-  border:2px solid var(--border-gold);border-radius:10px;
-  cursor:pointer;gap:1px;
-  box-shadow:0 3px 0 rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,200,.1);
-  transition:transform .08s,border-color .1s,box-shadow .1s;
-  position:relative;
-}
-.bbtn:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 7px 0 rgba(0,0,0,.5),0 0 12px rgba(255,200,0,.3);}
-.bbtn:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.5);}
-.bbtn.active{border-color:var(--gold);background:linear-gradient(180deg,#7a4a1a,#4a2808);box-shadow:0 4px 0 rgba(0,0,0,.5),0 0 16px rgba(255,180,0,.5);}
-.bbtn.locked{opacity:.38;cursor:not-allowed;filter:saturate(.3);}
+.bbtn{display:flex;flex-direction:column;align-items:center;justify-content:center;width:70px;height:76px;flex-shrink:0;background:linear-gradient(180deg,var(--panel3),var(--panel2));border:2px solid var(--gborder);border-radius:10px;cursor:pointer;gap:1px;box-shadow:0 3px 0 rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,200,.08);transition:transform .08s,border-color .12s,box-shadow .12s;position:relative;}
+.bbtn:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 7px 0 rgba(0,0,0,.5),0 0 12px rgba(255,200,0,.28);}
+.bbtn.on{border-color:var(--gold);background:linear-gradient(180deg,#7a4820,#4a2808);box-shadow:0 4px 0 rgba(0,0,0,.5),0 0 18px rgba(255,180,0,.5);}
+.bbtn.locked{opacity:.36;cursor:not-allowed;filter:saturate(.25);}
 .bbtn.locked:hover{transform:none;box-shadow:0 3px 0 rgba(0,0,0,.5);}
-.bicon{font-size:1.9rem;line-height:1;filter:drop-shadow(1px 2px 0 rgba(0,0,0,.4));}
-.bname{font-family:'Lilita One',cursive;font-size:.5rem;color:var(--cream);text-align:center;letter-spacing:.3px;line-height:1.2;}
-.bcost{font-size:.45rem;color:rgba(255,215,80,.8);font-weight:900;text-align:center;line-height:1.3;}
+.bicon{font-size:1.85rem;line-height:1;filter:drop-shadow(1px 2px 2px rgba(0,0,0,.45));}
+.bname{font-family:'Lilita One',cursive;font-size:.49rem;color:var(--cream);text-align:center;letter-spacing:.3px;line-height:1.2;}
+.bcost{font-size:.43rem;color:rgba(255,215,80,.8);font-weight:900;text-align:center;line-height:1.3;}
 </style>
 </head>
 <body>
 
-<!-- Portrait warning -->
-<div id="portrait-warn">
-  <div class="pw-icon">📱</div>
-  <div class="pw-text">Поверни телефон<br>горизонтально!</div>
+<!-- Portrait warn -->
+<div id="pwarn">
+  <div class="pwicon">📱</div>
+  <div class="pwtext">Поверни телефон<br>горизонтально!</div>
 </div>
 
-<!-- ====== LANDING ====== -->
+<!-- ======= LANDING ======= -->
 <div id="landing">
-  <div class="land-sky"></div>
-
-  <!-- Clouds -->
-  <div class="cloud" id="c1" style="width:140px;height:44px;top:8%;opacity:.92;"></div>
-  <div class="cloud" id="c2" style="width:90px;height:28px;top:18%;opacity:.75;"></div>
-  <div class="cloud" id="c3" style="width:170px;height:52px;top:6%;opacity:.85;"></div>
-  <div class="cloud" id="c4" style="width:80px;height:26px;top:22%;opacity:.6;"></div>
-
-  <div class="ground-row"></div>
-
-  <div class="tree-row">
-    <span class="land-tree">🌲</span>
-    <span class="land-tree">🌳</span>
-    <span class="land-tree">🌲</span>
-    <span class="land-tree" style="font-size:clamp(2rem,4.5vw,3.5rem)">🌿</span>
-    <span class="land-tree">🌲</span>
-    <span class="land-tree">🌳</span>
-    <span class="land-tree">🌲</span>
-    <span class="land-tree" style="font-size:clamp(2rem,4.5vw,3.5rem)">🌿</span>
-    <span class="land-tree">🌳</span>
-    <span class="land-tree">🌲</span>
+  <div class="lbg"></div>
+  <div class="lcloud" id="lc1" style="width:130px;height:42px;top:9%;"></div>
+  <div class="lcloud" id="lc2" style="width:85px;height:27px;top:19%;opacity:.72;"></div>
+  <div class="lcloud" id="lc3" style="width:160px;height:50px;top:6%;"></div>
+  <div class="lcloud" id="lc4" style="width:75px;height:24px;top:24%;opacity:.6;"></div>
+  <div class="lground"></div>
+  <div class="ltrees">
+    <span class="ltree">🌲</span><span class="ltree">🌳</span><span class="ltree">🌲</span>
+    <span class="ltree" style="font-size:clamp(1.8rem,4vw,3.2rem)">🌿</span>
+    <span class="ltree">🌲</span><span class="ltree">🌳</span>
+    <span class="ltree" style="font-size:clamp(1.8rem,4vw,3.2rem)">🌿</span>
+    <span class="ltree">🌲</span><span class="ltree">🌳</span><span class="ltree">🌲</span>
   </div>
-
-  <div class="title-wrap">
-    <div class="main-board">
-      <div class="game-logo">🏘 ХАТИНГРАД</div>
-      <div class="game-tagline">⚔️ Будуй · Захищай · Перемагай ⚔️</div>
+  <div class="lwrap">
+    <div class="lboard">
+      <div class="ltitle">🏘 ХАТИНГРАД</div>
+      <div class="lsub">⚔️ Будуй · Видобувай · Перемагай ⚔️</div>
     </div>
-
-    <div class="feat-row">
-      <div class="feat">🏗 Будівництво</div>
-      <div class="feat">⛏ Видобуток</div>
-      <div class="feat">📅 Денний цикл</div>
-      <div class="feat">🏆 Ратуша = Перемога</div>
-      <div class="feat">🇺🇦 Українська гра</div>
+    <div class="lfeats">
+      <div class="lfeat">🏗 Будівництво</div>
+      <div class="lfeat">⛏ Видобуток</div>
+      <div class="lfeat">📅 Денний цикл</div>
+      <div class="lfeat">🏆 Збудуй Ратушу</div>
+      <div class="lfeat">🇺🇦 Українська гра</div>
     </div>
-
-    <div class="play-wrap">
-      <button class="play-btn" onclick="startGame()">
-        <span class="play-emoji">⚔️</span>
-        ГРАТИ!
-        <span class="play-emoji">🏰</span>
+    <div class="lplaywrap">
+      <button class="lplay" onclick="startGame()">
+        <span class="lpemoji">⚔️</span>ГРАТИ!<span class="lpemoji">🏰</span>
       </button>
-      <div class="sub-btns">
-        <button class="sub-btn blue" onclick="showHelp()">📖 Як грати</button>
-        <button class="sub-btn orange">⭐ GitHub</button>
+      <div class="lsubbts">
+        <button class="lsub-bt blue" onclick="helpDlg()">📖 Як грати</button>
+        <button class="lsub-bt orange">⭐ GitHub</button>
       </div>
     </div>
   </div>
-
-  <div class="version-tag">v1.0 · Хатинград · 2026</div>
+  <div class="lver">v1.0 · Хатинград · 2026</div>
 </div>
 
-<!-- ====== GAME ====== -->
+<!-- ======= GAME ======= -->
 <div id="game">
+  <!-- HUD -->
   <div id="hud">
-    <div class="res-pill"><span class="res-icon">🪵</span><span class="res-val" id="r-wood">15</span></div>
-    <div class="res-pill"><span class="res-icon">🪨</span><span class="res-val" id="r-stone">8</span></div>
-    <div class="res-pill"><span class="res-icon">🌾</span><span class="res-val" id="r-food">10</span></div>
-    <div class="res-pill"><span class="res-icon">🔩</span><span class="res-val" id="r-iron">0</span></div>
-    <div class="res-pill"><span class="res-icon">👷</span><span class="res-val"><span id="r-pop">2</span>/<span id="r-max">5</span></span></div>
-    <div class="hud-sep"></div>
-    <div class="hud-day" id="hud-day">День 1</div>
-    <button class="hud-menu" onclick="backToMenu()">🏠 Меню</button>
+    <div class="rpill"><span class="ricon">🪵</span><span class="rval" id="r-wood">15</span></div>
+    <div class="rpill"><span class="ricon">🪨</span><span class="rval" id="r-stone">8</span></div>
+    <div class="rpill"><span class="ricon">🌾</span><span class="rval" id="r-food">10</span></div>
+    <div class="rpill"><span class="ricon">🔩</span><span class="rval" id="r-iron">0</span></div>
+    <div class="rpill"><span class="ricon">👷</span><span class="rval"><span id="r-pop">2</span>/<span id="r-max">5</span></span></div>
+    <div class="hbar"></div>
+    <div class="hday" id="hday">День 1</div>
+    <button class="hmenu" onclick="goMenu()">🏠 Меню</button>
   </div>
 
+  <!-- Canvas -->
   <div id="cw">
     <canvas id="gc"></canvas>
     <div id="glog"></div>
-    <div id="tip"></div>
-    <div id="win">
-      <div class="win-card">
-        <div class="win-trophy">🏆</div>
-        <div class="win-title">ПЕРЕМОГА!</div>
-        <div class="win-sub">Ратуша збудована!<br>Хатинград процвітає! 🎉</div>
-        <button class="win-btn" onclick="backToMenu()">🏠 До головного меню</button>
+    <div id="gtip"></div>
+    <div id="gwin">
+      <div class="wcard">
+        <div class="wtrophy">🏆</div>
+        <div class="wtitle">ПЕРЕМОГА!</div>
+        <div class="wsub">Ратуша збудована!<br>Хатинград процвітає! 🎉</div>
+        <button class="wbtn" onclick="goMenu()">🏠 Головне меню</button>
       </div>
     </div>
   </div>
 
+  <!-- Build panel -->
   <div id="panel">
-    <!-- Tools -->
     <div class="psec">
-      <span class="plabel">ДІЯ</span>
-      <button class="tbtn active" id="tool-dig" onclick="setTool('dig')"><span class="ticon">⛏</span><span class="tname">КОПАТИ</span></button>
-      <button class="tbtn" id="tool-info" onclick="setTool('info')"><span class="ticon">👁</span><span class="tname">ОГЛЯД</span></button>
-      <button class="tbtn" id="tool-del" onclick="setTool('del')"><span class="ticon">💥</span><span class="tname">ЗНЕСТИ</span></button>
+      <span class="plbl">ДІЯ</span>
+      <button class="tbtn on" id="tool-dig"     onclick="setTool('dig')"><span class="ticon">⛏</span><span class="tname">КОПАТИ</span></button>
+      <button class="tbtn"    id="tool-look"    onclick="setTool('look')"><span class="ticon">👁</span><span class="tname">ОГЛЯД</span></button>
+      <button class="tbtn"    id="tool-destroy" onclick="setTool('destroy')"><span class="ticon">💥</span><span class="tname">ЗНЕСТИ</span></button>
     </div>
     <div class="psep"></div>
-    <!-- Housing -->
     <div class="psec">
-      <span class="plabel">ЖИТЛО</span>
-      <button class="bbtn" id="btn-house" onclick="setBuild('house')"><span class="bicon">🏠</span><span class="bname">ХАТА</span><span class="bcost">🪵5 🪨2</span></button>
+      <span class="plbl">ЖИТЛО</span>
+      <button class="bbtn" id="btn-house"    onclick="setBuild('house')"><span class="bicon">🏠</span><span class="bname">ХАТА</span><span class="bcost">🪵5 🪨2</span></button>
       <button class="bbtn" id="btn-fortress" onclick="setBuild('fortress')"><span class="bicon">🏰</span><span class="bname">ФОРТЕЦЯ</span><span class="bcost">🪵15 🪨20 🔩5</span></button>
     </div>
     <div class="psep"></div>
-    <!-- Resources -->
     <div class="psec">
-      <span class="plabel">РЕСУРСИ</span>
-      <button class="bbtn" id="btn-mine" onclick="setBuild('mine')"><span class="bicon">⛏</span><span class="bname">ШАХТА</span><span class="bcost">🪵8 🪨5</span></button>
-      <button class="bbtn" id="btn-farm" onclick="setBuild('farm')"><span class="bicon">🌾</span><span class="bname">ФЕРМА</span><span class="bcost">🪵6</span></button>
+      <span class="plbl">РЕСУРСИ</span>
+      <button class="bbtn" id="btn-mine"    onclick="setBuild('mine')"><span class="bicon">⛏</span><span class="bname">ШАХТА</span><span class="bcost">🪵8 🪨5</span></button>
+      <button class="bbtn" id="btn-farm"    onclick="setBuild('farm')"><span class="bicon">🌾</span><span class="bname">ФЕРМА</span><span class="bcost">🪵6</span></button>
       <button class="bbtn" id="btn-sawmill" onclick="setBuild('sawmill')"><span class="bicon">🪚</span><span class="bname">ПИЛОРАМА</span><span class="bcost">🪵4 🪨3</span></button>
-      <button class="bbtn" id="btn-forge" onclick="setBuild('forge')"><span class="bicon">🔥</span><span class="bname">КУЗНЯ</span><span class="bcost">🪵6 🪨8</span></button>
+      <button class="bbtn" id="btn-forge"   onclick="setBuild('forge')"><span class="bicon">🔥</span><span class="bname">КУЗНЯ</span><span class="bcost">🪵6 🪨8</span></button>
     </div>
     <div class="psep"></div>
-    <!-- Defense -->
     <div class="psec">
-      <span class="plabel">ЗАХИСТ</span>
+      <span class="plbl">ЗАХИСТ</span>
       <button class="bbtn" id="btn-tower" onclick="setBuild('tower')"><span class="bicon">🗼</span><span class="bname">ВЕЖА</span><span class="bcost">🪨12 🔩5</span></button>
-      <button class="bbtn" id="btn-wall" onclick="setBuild('wall')"><span class="bicon">🧱</span><span class="bname">СТІНА</span><span class="bcost">🪨2</span></button>
+      <button class="bbtn" id="btn-wall"  onclick="setBuild('wall')"><span class="bicon">🧱</span><span class="bname">СТІНА</span><span class="bcost">🪨2</span></button>
     </div>
     <div class="psep"></div>
-    <!-- Special -->
     <div class="psec">
-      <span class="plabel">ОСОБЛИВЕ</span>
-      <button class="bbtn" id="btn-market" onclick="setBuild('market')"><span class="bicon">🏪</span><span class="bname">РИНОК</span><span class="bcost">🪵10 🔩3</span></button>
+      <span class="plbl">ОСОБЛИВЕ</span>
+      <button class="bbtn" id="btn-market"   onclick="setBuild('market')"><span class="bicon">🏪</span><span class="bname">РИНОК</span><span class="bcost">🪵10 🔩3</span></button>
       <button class="bbtn" id="btn-townhall" onclick="setBuild('townhall')"><span class="bicon">🏛</span><span class="bname">РАТУША</span><span class="bcost">🪵20 🪨30 🔩10</span></button>
-      <button class="bbtn" id="btn-road" onclick="setBuild('road')"><span class="bicon">🛤</span><span class="bname">ДОРОГА</span><span class="bcost">🪨1</span></button>
+      <button class="bbtn" id="btn-road"     onclick="setBuild('road')"><span class="bicon">🛤</span><span class="bname">ДОРОГА</span><span class="bcost">🪨1</span></button>
     </div>
   </div>
 </div>
 
 <script>
-// ============================================================
-// ISOMETRIC ENGINE — CoC style
-// ============================================================
-const ISO_W = 64;   // tile width in pixels
-const ISO_H = 32;   // tile height (half of width for 2:1 ratio)
-const COLS  = 28;
-const ROWS  = 28;
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// CONFIG
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const TW=56, TH=56; // tile size
+const COLS=36, ROWS=26;
 
 const T={
-  GRASS:0,TREE:1,ROCK:2,WATER:3,DIRT:4,IRON:5,
+  GRASS:0,TREE:1,ROCK:2,WATER:3,DIRT:4,IRON:5,FLOWERS:6,
   HOUSE:10,FORTRESS:11,MINE:12,FARM:13,SAWMILL:14,FORGE:15,
   TOWER:16,WALL:17,MARKET:18,TOWNHALL:19,ROAD:20
 };
 
-// Resources
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// STATE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const res={wood:15,stone:8,food:10,iron:0,pop:2,maxpop:5};
-
-// Game state
 let tool='dig', build=null;
-let day=1, tick=0;
-let camX=0, camY=0;
-let hoverGX=-1, hoverGY=-1;
-let isDrag=false, dragS=null, dragC=null, dragMoved=false;
-let gameRunning=false, animId=null, tickInt=null, inited=false;
-let logs=[];
+let day=1, tick=0, logs=[];
+let camX=0, camY=0, hx=-1, hy=-1;
+let dragging=false, dragS=null, dragC=null, dragged=false;
+let running=false, animId=null, tickId=null, inited=false;
 
 const grid=Array.from({length:ROWS},()=>Array(COLS).fill(T.GRASS));
-const bldMap={};  // "x,y" -> tile type
+const bmap={};
 
-// Build definitions
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// BUILD DEFS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const BD={
-  house:    {tile:T.HOUSE,    cost:{wood:5,stone:2},         icon:'🏠', maxpop:5},
-  fortress: {tile:T.FORTRESS, cost:{wood:15,stone:20,iron:5},icon:'🏰', maxpop:20},
-  mine:     {tile:T.MINE,     cost:{wood:8,stone:5},         icon:'⛏', prod:{stone:1}},
-  farm:     {tile:T.FARM,     cost:{wood:6},                  icon:'🌾', prod:{food:2}},
-  sawmill:  {tile:T.SAWMILL,  cost:{wood:4,stone:3},         icon:'🪚', prod:{wood:1}},
-  forge:    {tile:T.FORGE,    cost:{wood:6,stone:8},         icon:'🔥', prod:{iron:1}},
-  tower:    {tile:T.TOWER,    cost:{stone:12,iron:5},        icon:'🗼'},
-  wall:     {tile:T.WALL,     cost:{stone:2},                 icon:'🧱'},
-  market:   {tile:T.MARKET,   cost:{wood:10,iron:3},         icon:'🏪'},
-  townhall: {tile:T.TOWNHALL, cost:{wood:20,stone:30,iron:10},icon:'🏛', win:true},
-  road:     {tile:T.ROAD,     cost:{stone:1},                 icon:'🛤'},
+  house:    {tile:T.HOUSE,    cost:{wood:5,stone:2},         popBonus:5},
+  fortress: {tile:T.FORTRESS, cost:{wood:15,stone:20,iron:5},popBonus:20},
+  mine:     {tile:T.MINE,     cost:{wood:8,stone:5},         prod:{stone:1}},
+  farm:     {tile:T.FARM,     cost:{wood:6},                  prod:{food:2}},
+  sawmill:  {tile:T.SAWMILL,  cost:{wood:4,stone:3},         prod:{wood:1}},
+  forge:    {tile:T.FORGE,    cost:{wood:6,stone:8},         prod:{iron:1}},
+  tower:    {tile:T.TOWER,    cost:{stone:12,iron:5}},
+  wall:     {tile:T.WALL,     cost:{stone:2}},
+  market:   {tile:T.MARKET,   cost:{wood:10,iron:3}},
+  townhall: {tile:T.TOWNHALL, cost:{wood:20,stone:30,iron:10}, win:true},
+  road:     {tile:T.ROAD,     cost:{stone:1}},
 };
 
-const TNAME={
-  [T.GRASS]:'Трава',[T.TREE]:'🌲 Дерево → 🪵',[T.ROCK]:'🪨 Камінь → 🪨',
-  [T.WATER]:'💧 Вода',[T.DIRT]:'Земля',[T.IRON]:'⛏ Залізна руда → 🔩',
-  [T.HOUSE]:'🏠 Хата',[T.FORTRESS]:'🏰 Фортеця',[T.MINE]:'⛏ Шахта',
-  [T.FARM]:'🌾 Ферма',[T.SAWMILL]:'🪚 Пилорама',[T.FORGE]:'🔥 Кузня',
-  [T.TOWER]:'🗼 Вежа',[T.WALL]:'🧱 Стіна',[T.MARKET]:'🏪 Ринок',
-  [T.TOWNHALL]:'🏛 РАТУША',[T.ROAD]:'🛤 Дорога',
-};
-
-// Grass color variation for organic feel
-function gColor(x,y){
-  const v=(Math.sin(x*2.3+y*1.7)*0.5+0.5);
-  const r=Math.floor(55+v*18), g=Math.floor(130+v*28), b=Math.floor(40+v*15);
-  return `rgb(${r},${g},${b})`;
-}
-
-// ============================================================
-// WORLD GENERATION
-// ============================================================
-function noise(x,y,s=1){let n=Math.sin(x*127.1+y*311.7+s*74.3)*43758.5453;return n-Math.floor(n);}
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// WORLD GEN
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function ns(x,y,s=1){let n=Math.sin(x*127.1+y*311.7+s*74.3)*43758.5453;return n-Math.floor(n);}
 
 function genWorld(){
   for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++){
-    const n=noise(x*.12,y*.12,1)*.6+noise(x*.25,y*.25,5)*.4;
-    grid[y][x]=n<.12?T.WATER:n<.44?T.GRASS:n<.62?T.TREE:n<.75?T.ROCK:T.IRON;
+    const n=ns(x*.11,y*.11,1)*.65+ns(x*.24,y*.24,5)*.35;
+    if(n<.12) grid[y][x]=T.WATER;
+    else if(n<.18) grid[y][x]=T.GRASS; // near water = flowers
+    else if(n<.45) grid[y][x]=ns(x,y,9)>.7?T.FLOWERS:T.GRASS;
+    else if(n<.62) grid[y][x]=T.TREE;
+    else if(n<.75) grid[y][x]=T.ROCK;
+    else grid[y][x]=T.IRON;
   }
-  // Clear base area (center)
-  const cx=Math.floor(COLS/2), cy=Math.floor(ROWS/2);
+  // Clear start
+  const cx=COLS>>1, cy=ROWS>>1;
   for(let dy=-4;dy<=4;dy++) for(let dx=-4;dx<=4;dx++){
     const nx=cx+dx,ny=cy+dy;
-    if(nx>=0&&ny>=0&&nx<COLS&&ny<ROWS&&grid[ny][nx]!==T.WATER) grid[ny][nx]=T.GRASS;
+    if(nx>=0&&ny>=0&&nx<COLS&&ny<ROWS&&grid[ny][nx]!==T.WATER)
+      grid[ny][nx]=(Math.abs(dx)<=2&&Math.abs(dy)<=2)?T.GRASS:grid[ny][nx];
   }
-  // Place starter buildings
-  grid[cy][cx]=T.TOWNHALL; // will be replaced when player builds
-  grid[cy][cx]=T.HOUSE; bldMap[`${cx},${cy}`]=T.HOUSE;
-  grid[cy][cx+1]=T.FARM; bldMap[`${cx+1},${cy}`]=T.FARM;
-  grid[cy-1][cx]=T.MINE; bldMap[`${cx},${cy-1}`]=T.MINE;
+  grid[cy][cx]=T.HOUSE;   bmap[`${cx},${cy}`]=T.HOUSE;
+  grid[cy][cx+1]=T.FARM;  bmap[`${cx+1},${cy}`]=T.FARM;
+  grid[cy-1][cx]=T.MINE;  bmap[`${cx},${cy-1}`]=T.MINE;
 }
 
-// ============================================================
-// ISOMETRIC MATH
-// ============================================================
-// Grid (gx, gy) -> Screen (sx, sy) relative to camera
-function g2s(gx, gy){
-  const sx = (gx - gy) * (ISO_W / 2);
-  const sy = (gx + gy) * (ISO_H / 2);
-  return {sx, sy};
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// CANVAS & DRAW
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const cv=document.getElementById('gc'), cx2=cv.getContext('2d');
+function resizeCv(){const cw=document.getElementById('cw');cv.width=cw.clientWidth;cv.height=cw.clientHeight;}
+function w2s(gx,gy){return{sx:gx*TW-camX, sy:gy*TH-camY};}
+function s2w(sx,sy){return{gx:Math.floor((sx+camX)/TW), gy:Math.floor((sy+camY)/TH)};}
+function clampCam(){camX=Math.max(0,Math.min(camX,COLS*TW-cv.width));camY=Math.max(0,Math.min(camY,ROWS*TH-cv.height));}
+
+// Grass color palette — multiple green shades for organic look
+const GREENS=['#4aae4a','#52b852','#45a845','#4db44d','#56bc56','#3fa03f'];
+const DGREENS=['#2d8a2d','#328c32','#2a842a','#308030','#349034'];
+
+function grassColor(gx,gy){
+  const i=(gx*3+gy*7+gx^gy)%GREENS.length;
+  return GREENS[i];
 }
 
-// Screen (mx, my) -> Grid (gx, gy)
-function s2g(mx, my){
-  // Reverse isometric transform
-  const wx = mx + camX;
-  const wy = my + camY;
-  // offset to center origin
-  const ox = wx - originX;
-  const oy = wy - originY;
-  const gx = Math.floor(ox / ISO_W + oy / ISO_H);
-  const gy = Math.floor(oy / ISO_H - ox / ISO_W);
-  return {gx, gy};
+// Pre-draw decorative grass details
+function drawGrassTile(sx,sy,gx,gy){
+  const base=grassColor(gx,gy);
+  cx2.fillStyle=base;
+  cx2.fillRect(sx,sy,TW,TH);
+  // subtle dark edge (shadow)
+  const grad=cx2.createLinearGradient(sx,sy,sx+TW,sy+TH);
+  grad.addColorStop(0,'rgba(255,255,255,.04)');
+  grad.addColorStop(1,'rgba(0,0,0,.08)');
+  cx2.fillStyle=grad;
+  cx2.fillRect(sx,sy,TW,TH);
+  // grass tufts
+  cx2.fillStyle='rgba(0,80,0,.18)';
+  const seed=gx*17+gy*31;
+  for(let i=0;i<4;i++){
+    const px=((seed*13+i*29)%( TW-6))+2;
+    const py=((seed*7 +i*17)%(TH-6))+2;
+    cx2.fillRect(sx+px,sy+py,2,3);
+    cx2.fillRect(sx+px+1,sy+py+1,1,2);
+  }
 }
 
-// Origin: top of the diamond map on screen
-let originX=0, originY=0;
-
-function computeOrigin(){
-  // Top vertex of the iso grid is at grid (0,0)
-  // We want it centered on screen
-  const screenCX = canvas.width / 2;
-  const screenCY = canvas.height / 2;
-  // Center of grid in iso coords
-  const midGX = COLS / 2, midGY = ROWS / 2;
-  const midISO = g2s(midGX, midGY);
-  originX = screenCX - midISO.sx;
-  originY = screenCY - midISO.sy;
+function drawWaterTile(sx,sy,gx,gy,t2){
+  const wt=Date.now()/1000;
+  // base water
+  cx2.fillStyle='#1a6aaa';
+  cx2.fillRect(sx,sy,TW,TH);
+  // animated shimmer
+  const a=.1+Math.sin(wt*1.8+gx*.9+gy*.6)*.06;
+  cx2.fillStyle=`rgba(120,200,255,${a})`;
+  cx2.fillRect(sx+2,sy+4+((Math.sin(wt+gx)*.5+.5)*8|0),TW-6,3);
+  cx2.fillStyle=`rgba(120,200,255,${a*.7})`;
+  cx2.fillRect(sx+8,sy+14+((Math.sin(wt*.7+gy)*.5+.5)*6|0),TW-18,2);
+  // border
+  cx2.strokeStyle='rgba(80,150,220,.4)';cx2.lineWidth=.5;
+  cx2.strokeRect(sx,sy,TW,TH);
 }
 
-// ============================================================
-// DRAWING
-// ============================================================
-const canvas=document.getElementById('gc');
-const ctx=canvas.getContext('2d');
+function drawRoadTile(sx,sy){
+  cx2.fillStyle='#5a5a4a';cx2.fillRect(sx,sy,TW,TH);
+  cx2.fillStyle='#686858';
+  cx2.fillRect(sx+2,sy+TH/2-4,TW-4,7);
+  cx2.fillRect(sx+TW/2-4,sy+2,7,TH-4);
+  cx2.fillStyle='rgba(255,255,180,.22)';
+  cx2.fillRect(sx+TW/2-1,sy+2,2,TH-4);
+  cx2.fillRect(sx+2,sy+TH/2-1,TW-4,2);
+}
 
-// Tile colors
-const TC={
-  [T.GRASS]:null, // computed per tile
-  [T.TREE]:'#1e5c1e',
-  [T.ROCK]:'#5a5a5a',
-  [T.WATER]:'#1a5a9a',
-  [T.DIRT]:'#7a5a18',
-  [T.IRON]:'#3a4a3a',
-  [T.HOUSE]:'#6a4aaa',
-  [T.FORTRESS]:'#3a2888',
-  [T.MINE]:'#8a5a18',
-  [T.FARM]:'#2a8a18',
-  [T.SAWMILL]:'#9a5a18',
-  [T.FORGE]:'#8a1a1a',
-  [T.TOWER]:'#2a1a6a',
-  [T.WALL]:'#6a6a6a',
-  [T.MARKET]:'#7a4a18',
-  [T.TOWNHALL]:'#1a1a5a',
-  [T.ROAD]:'#4a4a4a',
+function drawWallTile(sx,sy){
+  cx2.fillStyle='#7a7060';cx2.fillRect(sx,sy,TW,TH);
+  cx2.fillStyle='#5a5248';
+  const bh=13, bw=TW/2-2;
+  for(let r=0;r<4;r++){
+    const off=r%2===0?0:bw/2+1;
+    const y2=sy+4+r*(bh+2);
+    cx2.fillRect(sx+off,y2,bw,bh-1);
+    if(off===0) cx2.fillRect(sx+bw*1.5+2,y2,bw/2,bh-1);
+    else cx2.fillRect(sx+bw*2+3,y2,bw/2-2,bh-1);
+  }
+  cx2.strokeStyle='rgba(0,0,0,.25)';cx2.lineWidth=.5;cx2.strokeRect(sx,sy,TW,TH);
+}
+
+// Big tile colors for non-grass tiles
+const TCOLORS={
+  [T.TREE]:'#1c5a1c',
+  [T.ROCK]:'#585858',
+  [T.DIRT]:'#8a6218',
+  [T.IRON]:'#384838',
+  [T.FLOWERS]:'#3aa03a',
+  [T.HOUSE]:'#5a3898',
+  [T.FORTRESS]:'#2e1870',
+  [T.MINE]:'#7a4e10',
+  [T.FARM]:'#2a8818',
+  [T.SAWMILL]:'#8a4e10',
+  [T.FORGE]:'#7a1818',
+  [T.TOWER]:'#28186a',
+  [T.MARKET]:'#6a3e18',
+  [T.TOWNHALL]:'#181860',
 };
-
-// Big emoji for buildings
 const TEMOJI={
-  [T.TREE]:'🌲',
-  [T.ROCK]:'🪨',
-  [T.WATER]:'🌊',
-  [T.IRON]:'⛏',
-  [T.HOUSE]:'🏠',
-  [T.FORTRESS]:'🏰',
-  [T.MINE]:'⛏',
-  [T.FARM]:'🌾',
-  [T.SAWMILL]:'🪚',
-  [T.FORGE]:'🔥',
-  [T.TOWER]:'🗼',
-  [T.WALL]:'🧱',
-  [T.MARKET]:'🏪',
-  [T.TOWNHALL]:'🏛',
-  [T.ROAD]:'🛤',
+  [T.TREE]:'🌲',[T.ROCK]:'🪨',[T.IRON]:'⛏️',
+  [T.FLOWERS]:'🌸',
+  [T.HOUSE]:'🏠',[T.FORTRESS]:'🏰',[T.MINE]:'⛏',[T.FARM]:'🌾',
+  [T.SAWMILL]:'🪚',[T.FORGE]:'🔥',[T.TOWER]:'🗼',[T.MARKET]:'🏪',
+  [T.TOWNHALL]:'🏛',[T.ROAD]:null,[T.WALL]:null,[T.WATER]:null,
+};
+const TNAME={
+  [T.GRASS]:'Трава',[T.TREE]:'🌲 Дерево',[T.ROCK]:'🪨 Камінь',[T.WATER]:'💧 Вода',
+  [T.DIRT]:'Земля',[T.IRON]:'⛏ Залізна руда',[T.FLOWERS]:'🌸 Квіти',
+  [T.HOUSE]:'🏠 Хата',[T.FORTRESS]:'🏰 Фортеця',[T.MINE]:'⛏ Шахта',
+  [T.FARM]:'🌾 Ферма',[T.SAWMILL]:'🪚 Пилорама',[T.FORGE]:'🔥 Кузня',
+  [T.TOWER]:'🗼 Вежа',[T.WALL]:'🧱 Стіна',[T.MARKET]:'🏪 Ринок',
+  [T.TOWNHALL]:'🏛 РАТУША — МЕТА!',[T.ROAD]:'🛤 Дорога',
 };
 
-// Draw one isometric tile
-function drawIsoTile(gx, gy, t, hover, ghostIcon){
-  const {sx, sy} = g2s(gx, gy);
-  const screenX = sx + originX - camX;
-  const screenY = sy + originY - camY;
+function drawTile(gx,gy){
+  const{sx,sy}=w2s(gx,gy);
+  if(sx>cv.width+TW||sy>cv.height+TH||sx<-TW||sy<-TH)return;
+  const t=grid[gy][gx];
+  const hover=(gx===hx&&gy===hy);
 
-  // Cull off-screen
-  if(screenX < -ISO_W*2 || screenX > canvas.width+ISO_W*2) return;
-  if(screenY < -ISO_H*4 || screenY > canvas.height+ISO_H*4) return;
-
-  const hw = ISO_W / 2;  // half width
-  const hh = ISO_H / 2;  // half height
-
-  // ---- TOP FACE (diamond) ----
-  const col = t===T.GRASS ? gColor(gx,gy) : (TC[t]||'#444');
-
-  // Shadow under tile
-  ctx.beginPath();
-  ctx.moveTo(screenX,      screenY + 3);
-  ctx.lineTo(screenX + hw, screenY + hh + 3);
-  ctx.lineTo(screenX,      screenY + ISO_H + 3);
-  ctx.lineTo(screenX - hw, screenY + hh + 3);
-  ctx.closePath();
-  ctx.fillStyle = 'rgba(0,0,0,.18)';
-  ctx.fill();
-
-  // Top face
-  ctx.beginPath();
-  ctx.moveTo(screenX,      screenY);
-  ctx.lineTo(screenX + hw, screenY + hh);
-  ctx.lineTo(screenX,      screenY + ISO_H);
-  ctx.lineTo(screenX - hw, screenY + hh);
-  ctx.closePath();
-
-  if(hover && !ghostIcon){
-    ctx.fillStyle = 'rgba(255,255,100,.35)';
-  } else if(hover && ghostIcon){
-    const bd = BD[build];
-    ctx.fillStyle = (bd && canAfford(bd.cost) && canPlace(gx,gy))
-      ? 'rgba(80,255,80,.3)' : 'rgba(255,60,60,.3)';
-  } else {
-    ctx.fillStyle = col;
-    // Lighter strip on top half
-    ctx.fill();
-    ctx.beginPath();
-    ctx.moveTo(screenX,      screenY);
-    ctx.lineTo(screenX + hw, screenY + hh);
-    ctx.lineTo(screenX,      screenY + ISO_H * .6);
-    ctx.lineTo(screenX - hw, screenY + hh);
-    ctx.closePath();
-    ctx.fillStyle = 'rgba(255,255,255,.07)';
-  }
-  ctx.fill();
-
-  // Tile outline
-  ctx.beginPath();
-  ctx.moveTo(screenX,      screenY);
-  ctx.lineTo(screenX + hw, screenY + hh);
-  ctx.lineTo(screenX,      screenY + ISO_H);
-  ctx.lineTo(screenX - hw, screenY + hh);
-  ctx.closePath();
-  if(hover){
-    ctx.strokeStyle = ghostIcon
-      ? (BD[build]&&canAfford(BD[build].cost)&&canPlace(gx,gy) ? 'rgba(80,255,80,.9)' : 'rgba(255,60,60,.9)')
-      : 'rgba(255,255,100,.8)';
-    ctx.lineWidth = 2;
-  } else {
-    ctx.strokeStyle = 'rgba(0,0,0,.2)';
-    ctx.lineWidth = .6;
-  }
-  ctx.stroke();
-
-  // ---- WATER ANIMATION ----
-  if(t===T.WATER){
-    const wt=Date.now()/1000;
-    ctx.beginPath();
-    ctx.moveTo(screenX,      screenY);
-    ctx.lineTo(screenX + hw, screenY + hh);
-    ctx.lineTo(screenX,      screenY + ISO_H);
-    ctx.lineTo(screenX - hw, screenY + hh);
-    ctx.closePath();
-    ctx.fillStyle=`rgba(100,180,255,${.12+Math.sin(wt*2+gx+gy)*.06})`;
-    ctx.fill();
-  }
-
-  // ---- EMOJI / SPRITE ----
-  const em = ghostIcon || TEMOJI[t];
-  if(em){
-    // Emoji size scales with tile
-    const sz = t >= 10 ? ISO_W * .85 : ISO_W * .65; // buildings bigger
-    ctx.font = `${sz}px serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'bottom';
-    if(ghostIcon) ctx.globalAlpha = .55;
-    ctx.fillText(em, screenX, screenY + ISO_H * .35);
-    if(ghostIcon) ctx.globalAlpha = 1;
-  }
-
-  // ---- ROAD pattern ----
-  if(t===T.ROAD){
-    ctx.strokeStyle='rgba(200,180,100,.5)';ctx.lineWidth=1.5;
-    ctx.beginPath();ctx.moveTo(screenX-hw*.5,screenY+hh);ctx.lineTo(screenX+hw*.5,screenY+hh);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(screenX,screenY+hh*.4);ctx.lineTo(screenX,screenY+ISO_H-hh*.4);ctx.stroke();
-  }
-}
-
-function resizeCanvas(){
-  const cw = document.getElementById('cw');
-  canvas.width  = cw.clientWidth;
-  canvas.height = cw.clientHeight;
-  computeOrigin();
-}
-
-// Draw sort order: top-left to bottom-right (painter's algorithm for iso)
-function draw(){
-  ctx.fillStyle='#3a7a3a';
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  // Draw in correct iso order (diagonal stripes)
-  for(let d=0; d<COLS+ROWS-1; d++){
-    for(let gx=Math.max(0,d-ROWS+1); gx<=Math.min(d,COLS-1); gx++){
-      const gy=d-gx;
-      if(gy<0||gy>=ROWS) continue;
-      const t=grid[gy][gx];
-      const hover=(gx===hoverGX&&gy===hoverGY);
-      const ghostIcon=(hover&&build)?BD[build]?.icon:null;
-      drawIsoTile(gx,gy,t,hover,ghostIcon);
+  // ---- BASE TILE ----
+  if(t===T.GRASS||t===T.FLOWERS){
+    drawGrassTile(sx,sy,gx,gy);
+    if(t===T.FLOWERS){
+      cx2.font=`${TW*.45}px serif`;cx2.textAlign='center';cx2.textBaseline='middle';
+      cx2.fillText('🌸',sx+TW/2,sy+TH/2+2);
     }
+  } else if(t===T.WATER){
+    drawWaterTile(sx,sy,gx,gy,t);
+  } else if(t===T.ROAD){
+    drawRoadTile(sx,sy);
+  } else if(t===T.WALL){
+    drawWallTile(sx,sy);
+  } else if(t===T.DIRT){
+    cx2.fillStyle='#9a7228';cx2.fillRect(sx,sy,TW,TH);
+    cx2.fillStyle='rgba(0,0,0,.08)';
+    cx2.fillRect(sx,sy,TW,TH);
+  } else {
+    // colored tile with gradient
+    const col=TCOLORS[t]||'#444';
+    cx2.fillStyle=col;cx2.fillRect(sx,sy,TW,TH);
+    // top-left highlight
+    const lg=cx2.createLinearGradient(sx,sy,sx+TW*.6,sy+TH*.6);
+    lg.addColorStop(0,'rgba(255,255,255,.12)');
+    lg.addColorStop(1,'rgba(0,0,0,.12)');
+    cx2.fillStyle=lg;cx2.fillRect(sx,sy,TW,TH);
+  }
+
+  // ---- BUILDING SHADOW (for buildings) ----
+  if(t>=10&&t!==T.ROAD&&t!==T.WALL){
+    cx2.fillStyle='rgba(0,0,0,.22)';
+    cx2.beginPath();
+    cx2.ellipse(sx+TW/2+4,sy+TH-5,TW*.35,TH*.12,0,0,Math.PI*2);
+    cx2.fill();
+  }
+
+  // ---- EMOJI SPRITE ----
+  const em=TEMOJI[t];
+  if(em){
+    const sz=t>=10?TW*.9:TW*.72; // buildings bigger
+    cx2.font=`${sz}px serif`;cx2.textAlign='center';cx2.textBaseline='bottom';
+    // slight shadow for depth
+    cx2.fillStyle='rgba(0,0,0,.18)';
+    cx2.fillText(em,sx+TW/2+2,sy+TH-2+2);
+    cx2.fillStyle='white';
+    cx2.fillText(em,sx+TW/2,sy+TH-2);
+  }
+
+  // ---- TILE BORDER ----
+  cx2.strokeStyle='rgba(0,0,0,.12)';cx2.lineWidth=.5;
+  cx2.strokeRect(sx,sy,TW,TH);
+
+  // ---- HOVER OVERLAY ----
+  if(hover){
+    const bd=build?BD[build]:null;
+    let overlayColor,borderColor;
+    if(bd){
+      const ok=canAfford(bd.cost)&&canPlace(gx,gy);
+      overlayColor=ok?'rgba(80,255,80,.22)':'rgba(255,60,60,.22)';
+      borderColor=ok?'rgba(80,255,80,.9)':'rgba(255,60,60,.9)';
+      if(ok){
+        const icons={house:'🏠',fortress:'🏰',mine:'⛏',farm:'🌾',sawmill:'🪚',forge:'🔥',tower:'🗼',wall:'🧱',market:'🏪',townhall:'🏛',road:'🛤'};
+        const ico=icons[build];
+        if(ico){cx2.globalAlpha=.5;cx2.font=`${TW*.8}px serif`;cx2.textAlign='center';cx2.textBaseline='middle';cx2.fillText(ico,sx+TW/2,sy+TH/2);cx2.globalAlpha=1;}
+      }
+    } else {
+      overlayColor='rgba(255,255,120,.14)';borderColor='rgba(255,255,120,.7)';
+    }
+    cx2.fillStyle=overlayColor;cx2.fillRect(sx,sy,TW,TH);
+    cx2.strokeStyle=borderColor;cx2.lineWidth=2.5;
+    cx2.strokeRect(sx+1,sy+1,TW-2,TH-2);
+  }
+
+  // ---- SELECTED BUILDING PULSE ----
+  if(t>=10 && build && tool==='build'){
+    // no extra effect needed, hover handles it
   }
 }
 
-// ============================================================
-// GAME LOGIC
-// ============================================================
+function draw(){
+  cx2.fillStyle='#3a7a3a';cx2.fillRect(0,0,cv.width,cv.height);
+  for(let gy=0;gy<ROWS;gy++) for(let gx=0;gx<COLS;gx++) drawTile(gx,gy);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// LOGIC
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function canAfford(c){for(const[k,v]of Object.entries(c))if((res[k]||0)<v)return false;return true;}
-function canPlace(x,y){const t=grid[y]?.[x];return t!==undefined&&t!==T.WATER&&t<10;}
+function canPlace(gx,gy){const t=grid[gy]?.[gx];return t!==undefined&&t!==T.WATER&&t<10;}
 function spend(c){for(const[k,v]of Object.entries(c))res[k]-=v;}
 
 function setTool(t){
   tool=t;build=null;
-  document.querySelectorAll('.tbtn,.bbtn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tool-'+t)?.classList.add('active');
+  document.querySelectorAll('.tbtn,.bbtn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tool-'+t)?.classList.add('on');
 }
 function setBuild(b){
   build=b;tool='build';
-  document.querySelectorAll('.tbtn,.bbtn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('btn-'+b)?.classList.add('active');
+  document.querySelectorAll('.tbtn,.bbtn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('btn-'+b)?.classList.add('on');
 }
 
-function spawnFloat(screenX,screenY,txt){
+function spawnFT(sx,sy,txt){
   const el=document.createElement('div');
   el.className='ft';el.textContent=txt;
-  el.style.left=`${screenX-24}px`;el.style.top=`${screenY-20}px`;
+  el.style.left=sx-24+'px';el.style.top=sy-20+'px';
   document.getElementById('cw').appendChild(el);
-  setTimeout(()=>el.remove(),900);
+  setTimeout(()=>el.remove(),920);
 }
 
 function doAction(gx,gy,sx,sy){
-  if(gx<0||gy<0||gx>=COLS||gy>=ROWS) return;
+  if(gx<0||gy<0||gx>=COLS||gy>=ROWS)return;
   const t=grid[gy][gx];
 
   if(tool==='dig'){
-    if(t===T.TREE){const g=2+(Math.random()*3|0);res.wood+=g;grid[gy][gx]=T.DIRT;spawnFloat(sx,sy,`+${g}🪵`);addLog(`Зрубав дерево: +${g} 🪵`);}
-    else if(t===T.ROCK){const g=1+(Math.random()*3|0);res.stone+=g;grid[gy][gx]=T.DIRT;spawnFloat(sx,sy,`+${g}🪨`);addLog(`Здобув камінь: +${g} 🪨`);}
-    else if(t===T.IRON){const g=1+(Math.random()*2|0);res.iron+=g;res.stone+=1;grid[gy][gx]=T.DIRT;spawnFloat(sx,sy,`+${g}🔩`);addLog(`Руда: +${g}🔩 +1🪨`);}
+    if(t===T.TREE||t===T.FLOWERS&&false){const g=2+(Math.random()*3|0);res.wood+=g;grid[gy][gx]=T.DIRT;spawnFT(sx,sy,`+${g}🪵`);addLog(`Зрубав дерево: +${g}🪵`);}
+    else if(t===T.TREE){const g=2+(Math.random()*3|0);res.wood+=g;grid[gy][gx]=T.DIRT;spawnFT(sx,sy,`+${g}🪵`);addLog(`Зрубав дерево: +${g}🪵`);}
+    else if(t===T.ROCK){const g=1+(Math.random()*3|0);res.stone+=g;grid[gy][gx]=T.DIRT;spawnFT(sx,sy,`+${g}🪨`);addLog(`Здобув камінь: +${g}🪨`);}
+    else if(t===T.IRON){const g=1+(Math.random()*2|0);res.iron+=g;res.stone+=1;grid[gy][gx]=T.DIRT;spawnFT(sx,sy,`+${g}🔩`);addLog(`Руда: +${g}🔩 +1🪨`);}
+    else if(t===T.FLOWERS){res.food+=1;grid[gy][gx]=T.GRASS;spawnFT(sx,sy,'+1🌾');addLog('Зібрав квіти: +1🌾');}
     else if(t===T.WATER)addLog('💧 Воду не видобути!');
     else if(t>=10)addLog('⚠️ Спочатку знеси будівлю');
     else addLog('⚠️ Тут нема ресурсів');
   }
-  else if(tool==='del'){
+  else if(tool==='destroy'){
     if(t>=10){
       const bKey=Object.entries(BD).find(([,v])=>v.tile===t);
       if(bKey){const c=bKey[1].cost;for(const[k,v]of Object.entries(c))res[k]=(res[k]||0)+Math.floor(v/2);}
-      delete bldMap[`${gx},${gy}`];grid[gy][gx]=T.DIRT;
-      if(t===T.HOUSE||t===T.FORTRESS){
-        const mp=t===T.HOUSE?5:20;
-        res.maxpop=Math.max(5,res.maxpop-mp);
-        res.pop=Math.min(res.pop,res.maxpop);
-      }
-      spawnFloat(sx,sy,'💥');addLog('💥 Знесено — повернено 50% ресурсів');
+      delete bmap[`${gx},${gy}`];
+      grid[gy][gx]=T.DIRT;
+      if(t===T.HOUSE)res.maxpop=Math.max(5,res.maxpop-5);
+      if(t===T.FORTRESS)res.maxpop=Math.max(5,res.maxpop-20);
+      res.pop=Math.min(res.pop,res.maxpop);
+      spawnFT(sx,sy,'💥');addLog('💥 Знесено — повернено 50%');
     } else addLog('⚠️ Тут нема будівлі');
   }
   else if(tool==='build'&&build){
     const bd=BD[build];
-    if(!canAfford(bd.cost)){addLog('❌ Недостатньо ресурсів!');shakBtn('btn-'+build);return;}
+    if(!canAfford(bd.cost)){addLog('❌ Недостатньо ресурсів!');shakeBt('btn-'+build);return;}
     if(!canPlace(gx,gy)){addLog('❌ Не можна будувати тут');return;}
     spend(bd.cost);
-    grid[gy][gx]=bd.tile;bldMap[`${gx},${gy}`]=bd.tile;
-    if(bd.maxpop) res.maxpop+=bd.maxpop;
-    spawnFloat(sx,sy,'✅');
+    grid[gy][gx]=bd.tile;bmap[`${gx},${gy}`]=bd.tile;
+    if(bd.popBonus)res.maxpop+=bd.popBonus;
+    spawnFT(sx,sy,'✅');
     addLog(`✅ ${TNAME[bd.tile]||build} збудовано!`);
-    if(bd.win) setTimeout(()=>document.getElementById('win').classList.add('show'),500);
+    if(bd.win)setTimeout(()=>document.getElementById('gwin').classList.add('on'),500);
   }
   updateHUD();
 }
 
-function shakBtn(id){
+function shakeBt(id){
   const b=document.getElementById(id);if(!b)return;
   b.style.transform='translateX(-5px)';
   setTimeout(()=>b.style.transform='translateX(5px)',80);
   setTimeout(()=>b.style.transform='',160);
 }
 
-function addLog(msg){logs.push(msg);if(logs.length>4)logs.shift();document.getElementById('glog').innerHTML=logs.map(l=>`<div>${l}</div>`).join('');}
-function resEmoji(r){return{wood:'🪵',stone:'🪨',food:'🌾',iron:'🔩'}[r]||r;}
+function addLog(m){logs.push(m);if(logs.length>4)logs.shift();document.getElementById('glog').innerHTML=logs.map(l=>`<div>${l}</div>`).join('');}
+function ri(r){return{wood:'🪵',stone:'🪨',food:'🌾',iron:'🔩'}[r]||r;}
 
 function gameTick(){
   tick++;
   if(tick%4===0){
-    day++;
-    document.getElementById('hud-day').textContent=`День ${day}`;
+    day++;document.getElementById('hday').textContent=`День ${day}`;
     const prod={};
-    for(const bt of Object.values(bldMap)){
+    for(const bt of Object.values(bmap)){
       const bd=Object.values(BD).find(b=>b.tile===bt);
-      if(bd?.prod) for(const[r,v]of Object.entries(bd.prod)) prod[r]=(prod[r]||0)+v;
+      if(bd?.prod)for(const[r,v]of Object.entries(bd.prod))prod[r]=(prod[r]||0)+v;
     }
     prod.food=(prod.food||0)-res.pop;
     const msgs=[];
     for(const[r,a]of Object.entries(prod)){
-      if(a>0){res[r]=(res[r]||0)+a;msgs.push(`+${a}${resEmoji(r)}`);}
+      if(a>0){res[r]=(res[r]||0)+a;msgs.push(`+${a}${ri(r)}`);}
       else if(a<0){res[r]=Math.max(0,(res[r]||0)+a);if(res.food<=0)msgs.push('😢 Голод!');}
     }
     if(msgs.length)addLog(`📅 День ${day}: ${msgs.join(' ')}`);
@@ -765,136 +672,116 @@ function updateHUD(){
   }
 }
 
-// ============================================================
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // INPUT
-// ============================================================
-canvas.addEventListener('mousemove', e=>{
-  const r=canvas.getBoundingClientRect();
-  const mx=e.clientX-r.left, my=e.clientY-r.top;
-  if(isDrag&&dragS){
-    camX=dragC.x-(e.clientX-dragS.x);
-    camY=dragC.y-(e.clientY-dragS.y);
-    dragMoved=true;
-    document.getElementById('tip').style.display='none';
-    return;
-  }
-  const{gx,gy}=s2g(mx,my);
-  hoverGX=gx;hoverGY=gy;
-  const tn=(gx>=0&&gy>=0&&gx<COLS&&gy<ROWS)?TNAME[grid[gy][gx]]:null;
-  const tp=document.getElementById('tip');
-  if(tn&&tool!=='build'){tp.style.display='block';tp.textContent=tn;tp.style.left=`${mx+16}px`;tp.style.top=`${my-32}px`;}
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+cv.addEventListener('mousemove',e=>{
+  const r=cv.getBoundingClientRect(), mx=e.clientX-r.left, my=e.clientY-r.top;
+  if(dragging&&dragS){camX=dragC.x-(e.clientX-dragS.x);camY=dragC.y-(e.clientY-dragS.y);clampCam();dragged=true;document.getElementById('gtip').style.display='none';return;}
+  const{gx,gy}=s2w(mx,my);hx=gx;hy=gy;
+  const nm=TNAME[grid[gy]?.[gx]];
+  const tp=document.getElementById('gtip');
+  if(nm&&tool!=='build'){tp.style.display='block';tp.textContent=nm;tp.style.left=mx+15+'px';tp.style.top=my-34+'px';}
   else tp.style.display='none';
 });
-
-canvas.addEventListener('mousedown', e=>{
-  if(e.button===1||e.button===2){e.preventDefault();isDrag=true;dragS={x:e.clientX,y:e.clientY};dragC={x:camX,y:camY};dragMoved=false;}
-  else if(e.button===0){isDrag=false;dragMoved=false;}
+cv.addEventListener('mousedown',e=>{if(e.button!==0){e.preventDefault();dragging=true;dragS={x:e.clientX,y:e.clientY};dragC={x:camX,y:camY};dragged=false;}});
+cv.addEventListener('mouseup',()=>{dragging=false;dragS=null;});
+cv.addEventListener('mouseleave',()=>{dragging=false;dragS=null;hx=-1;hy=-1;document.getElementById('gtip').style.display='none';});
+cv.addEventListener('click',e=>{
+  if(dragged){dragged=false;return;}
+  const r=cv.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;
+  const{gx,gy}=s2w(mx,my);doAction(gx,gy,mx,my);
 });
-canvas.addEventListener('mouseup', ()=>{if(isDrag){isDrag=false;dragS=null;}});
-canvas.addEventListener('mouseleave', ()=>{isDrag=false;dragS=null;hoverGX=-1;hoverGY=-1;document.getElementById('tip').style.display='none';});
+cv.addEventListener('contextmenu',e=>{e.preventDefault();build=null;setTool('dig');});
+cv.addEventListener('wheel',e=>{e.preventDefault();camX+=e.deltaX*.6;camY+=e.deltaY*.6;clampCam();},{passive:false});
 
-canvas.addEventListener('click', e=>{
-  if(dragMoved){dragMoved=false;return;}
-  const r=canvas.getBoundingClientRect();
-  const mx=e.clientX-r.left,my=e.clientY-r.top;
-  const{gx,gy}=s2g(mx,my);
-  doAction(gx,gy,mx,my);
-});
-
-canvas.addEventListener('contextmenu', e=>{e.preventDefault();build=null;setTool('dig');});
-canvas.addEventListener('wheel', e=>{
-  e.preventDefault();
-  camX+=e.deltaX*.6;camY+=e.deltaY*.6;
-},{passive:false});
-
-// Touch
-let lTouch=null,tMoved=false;
-canvas.addEventListener('touchstart',e=>{const t=e.touches[0];lTouch={x:t.clientX,y:t.clientY};tMoved=false;},{passive:true});
-canvas.addEventListener('touchmove',e=>{
-  e.preventDefault();tMoved=true;
-  const t=e.touches[0];
-  camX-=t.clientX-lTouch.x;camY-=t.clientY-lTouch.y;
-  lTouch={x:t.clientX,y:t.clientY};
-},{passive:false});
-canvas.addEventListener('touchend',e=>{
-  if(tMoved)return;
-  const t=e.changedTouches[0];
-  const r=canvas.getBoundingClientRect();
+let lt=null,tm=false;
+cv.addEventListener('touchstart',e=>{const t=e.touches[0];lt={x:t.clientX,y:t.clientY};tm=false;},{passive:true});
+cv.addEventListener('touchmove',e=>{e.preventDefault();tm=true;const t=e.touches[0];camX-=t.clientX-lt.x;camY-=t.clientY-lt.y;clampCam();lt={x:t.clientX,y:t.clientY};},{passive:false});
+cv.addEventListener('touchend',e=>{
+  if(tm)return;
+  const t=e.changedTouches[0],r=cv.getBoundingClientRect();
   const mx=t.clientX-r.left,my=t.clientY-r.top;
-  const{gx,gy}=s2g(mx,my);
-  doAction(gx,gy,mx,my);
+  const{gx,gy}=s2w(mx,my);doAction(gx,gy,mx,my);
 },{passive:true});
 
-// ============================================================
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // GAME LOOP
-// ============================================================
-function gameLoop(){if(!gameRunning)return;draw();animId=requestAnimationFrame(gameLoop);}
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function loop(){if(!running)return;draw();animId=requestAnimationFrame(loop);}
 
 function startGame(){
   document.getElementById('landing').classList.add('hide');
-  document.getElementById('game').classList.add('active');
+  document.getElementById('game').classList.add('on');
   setTimeout(()=>{
     if(!inited){
-      inited=true;
-      genWorld();resizeCanvas();
-      // Center cam on the grid center
-      camX=0;camY=0;
-      updateHUD();setTool('dig');
+      inited=true;genWorld();resizeCv();
+      camX=Math.max(0,(COLS>>1)*TW-cv.width/2);
+      camY=Math.max(0,(ROWS>>1)*TH-cv.height/2);
+      clampCam();updateHUD();setTool('dig');
       addLog('🏘 Ласкаво просимо до Хатинграду!');
       addLog('⛏ Клікай на ресурси щоб збирати');
       addLog('🏗 Вибери будівлю знизу і будуй!');
-      addLog('🎯 Збудуй 🏛 Ратушу — і переможеш!');
-      tickInt=setInterval(gameTick,1800);
+      addLog('🎯 Збудуй 🏛 Ратушу — перемога!');
+      tickId=setInterval(gameTick,1800);
     }
-    gameRunning=true;gameLoop();
+    running=true;loop();
   },120);
 }
 
-function backToMenu(){
-  gameRunning=false;if(animId)cancelAnimationFrame(animId);
-  document.getElementById('win').classList.remove('show');
-  document.getElementById('game').classList.remove('active');
+function goMenu(){
+  running=false;if(animId)cancelAnimationFrame(animId);
+  document.getElementById('gwin').classList.remove('on');
+  document.getElementById('game').classList.remove('on');
   document.getElementById('landing').classList.remove('hide');
 }
 
-function showHelp(){
-  alert('⛏ КОПАТИ — клікай по деревах, каменях, залізній руді\n🏗 БУДІВЛІ — вибери знизу, потім клікни куди будувати\n💥 ЗНЕСТИ — видали будівлю (повернеться 50% ресурсів)\n🖱 ПКМ або 2 пальці — скасувати вибір\n📜 Скрол/перетягування — рух камери\n\n🎯 Мета: збудувати Ратушу 🏛');
+function helpDlg(){
+  alert(
+    '⛏ КОПАТИ — клікай по 🌲 деревах, 🪨 скелях, ⛏ руді, 🌸 квітах\n'+
+    '🏗 БУДІВЛІ — вибери знизу, потім клікни на вільну клітинку\n'+
+    '💥 ЗНЕСТИ — видали будівлю (повернеться 50% ресурсів)\n'+
+    '🖱 ПКМ / drag — рух камери\n'+
+    '📜 Колесо миші — прокрутка\n\n'+
+    '📅 Будівлі виробляють ресурси щодня автоматично\n'+
+    '🎯 МЕТА: збудувати 🏛 Ратушу!'
+  );
 }
 
-window.addEventListener('resize',()=>{
-  if(gameRunning){resizeCanvas();}
-  checkOrientation();
-});
-
-function checkOrientation(){
-  const pw=document.getElementById('portrait-warn');
-  if(window.innerHeight>window.innerWidth){pw.classList.add('show');}
-  else{pw.classList.remove('show');}
-}
-
-// Landing cloud animation
-function animateClouds(){
-  const clouds=[
-    {el:document.getElementById('c1'),spd:22,top:'8%'},
-    {el:document.getElementById('c2'),spd:35,top:'18%'},
-    {el:document.getElementById('c3'),spd:28,top:'6%'},
-    {el:document.getElementById('c4'),spd:42,top:'22%'},
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// LANDING CLOUD ANIMATION
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(function animClouds(){
+  const cs=[
+    {id:'lc1',speed:.38,y:'9%', w:130},
+    {id:'lc2',speed:.24,y:'19%',w:85},
+    {id:'lc3',speed:.31,y:'6%', w:160},
+    {id:'lc4',speed:.18,y:'24%',w:75},
   ];
-  const starts=[-200,-400,-100,-600];
-  clouds.forEach((c,i)=>{let x=starts[i];
-    function step(){
-      x+=.4/(c.spd/20);
-      if(x>window.innerWidth+300) x=-300;
-      if(c.el) c.el.style.left=x+'px';
+  const xs=[-200,-500,-100,-700];
+  cs.forEach((c,i)=>{
+    const el=document.getElementById(c.id);
+    if(!el)return;
+    el.style.top=c.y;el.style.width=c.w+'px';el.style.height=(c.w*.32|0)+'px';
+    let x=xs[i];
+    (function step(){
+      x+=c.speed;
+      if(x>window.innerWidth+400)x=-400;
+      el.style.left=x+'px';
       requestAnimationFrame(step);
-    }
-    step();
+    })();
   });
-}
+})();
 
-animateClouds();
-checkOrientation();
-window.addEventListener('orientationchange',()=>setTimeout(checkOrientation,300));
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ORIENTATION
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function checkOri(){
+  document.getElementById('pwarn').classList.toggle('on',window.innerHeight>window.innerWidth);
+}
+window.addEventListener('resize',()=>{if(running){resizeCv();clampCam();}checkOri();});
+window.addEventListener('orientationchange',()=>setTimeout(checkOri,300));
+checkOri();
 </script>
 </body>
 </html>
