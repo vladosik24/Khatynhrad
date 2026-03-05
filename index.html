@@ -3,667 +3,835 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🏘 Хатинград — Збудуй своє місто</title>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<title>🏘 Хатинград</title>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
-:root {
-  --soil:  #2d1b0e; --bark: #4a2c0a; --wood: #8b5e2a;
-  --straw: #c8942a; --gold: #f5c842; --leaf: #3d7a2a;
-  --grass: #4e9e35; --sky:  #7ecbf0; --stone: #7a8a7a;
-  --smoke: #c8d4c8; --cream: #f5edd8; --ink: #1a1208;
-  --ember: #e85c20;
+:root{
+  --sky1:#4ab8ff;--sky2:#1a7ad4;--ground:#5cb85c;--dark-green:#2d7a2d;
+  --brown:#8B4513;--gold:#FFD700;--gold2:#FFA500;--dark-gold:#cc8800;
+  --cream:#fffbe6;--shadow:#1a1a2e;--red:#e74c3c;--purple:#9b59b6;
+  --btn-green:#27ae60;--btn-green2:#1e8449;--btn-blue:#2980b9;
+  --stone-gray:#95a5a6;--wood-brown:#a0522d;
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{background:var(--soil);color:var(--cream);font-family:'Pixelify Sans',sans-serif;font-size:18px;overflow-x:hidden;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif;}
 
-/* ===== NAV ===== */
-nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(26,10,2,0.95);backdrop-filter:blur(4px);border-bottom:2px solid var(--wood);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
-.nav-logo{font-family:'Press Start 2P',monospace;font-size:11px;color:var(--gold);text-decoration:none;text-shadow:2px 2px 0 var(--bark);}
-.nav-links{display:flex;gap:4px;list-style:none;flex-wrap:wrap;}
-.nav-links a{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--smoke);text-decoration:none;padding:6px 10px;border:1px solid transparent;transition:all .15s;}
-.nav-links a:hover,.nav-links a.active{color:var(--gold);border-color:var(--wood);}
-.play-nav-btn{font-family:'Press Start 2P',monospace;font-size:9px;padding:8px 16px;background:var(--grass);color:var(--cream);border:2px solid var(--leaf);cursor:pointer;box-shadow:3px 3px 0 var(--soil);transition:all .1s;text-decoration:none;display:inline-block;}
-.play-nav-btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--soil);}
-@media(max-width:500px){.nav-links{display:none;}}
-
-/* ===== HERO ===== */
-#hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;background:linear-gradient(180deg,#0d1a2e 0%,#1a3a5a 30%,#e8a04a 65%,#c86428 80%,#7a3218 100%);padding-top:60px;}
-.stars{position:absolute;inset:0;pointer-events:none;}
-.star{position:absolute;width:3px;height:3px;background:white;animation:twinkle 2s infinite alternate;}
-.star:nth-child(2n){width:2px;height:2px;animation-delay:.5s;}
-.star:nth-child(3n){animation-delay:1s;background:#ffe8a0;}
-@keyframes twinkle{from{opacity:.3}to{opacity:1}}
-.skyline{position:absolute;bottom:0;left:0;right:0;height:240px;display:flex;align-items:flex-end;justify-content:center;pointer-events:none;}
-.bsil{background:var(--ink);position:relative;flex-shrink:0;}
-.win{position:absolute;background:var(--gold);animation:flicker 3s infinite alternate;box-shadow:0 0 6px var(--gold);}
-@keyframes flicker{0%,90%{opacity:1}95%{opacity:.4}100%{opacity:1}}
-.smoke-puff{position:absolute;bottom:100%;left:50%;width:8px;height:8px;background:var(--smoke);border-radius:50%;opacity:0;animation:rise 4s ease-out infinite;transform:translateX(-50%);}
-@keyframes rise{0%{opacity:.7;transform:translateX(-50%) translateY(0) scale(1)}100%{opacity:0;transform:translateX(-50%) translateY(-80px) scale(3)}}
-.hero-content{position:relative;z-index:10;text-align:center;padding:2rem;animation:fadeUp 1s ease both;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
-.hero-title{font-family:'Press Start 2P',monospace;font-size:clamp(2rem,8vw,5rem);color:var(--gold);text-shadow:4px 4px 0 var(--bark),0 0 40px rgba(245,200,66,.5);letter-spacing:4px;line-height:1.3;margin-bottom:.5rem;}
-.hero-sub{font-size:clamp(1rem,3vw,1.5rem);color:var(--straw);font-weight:600;letter-spacing:2px;margin-bottom:2rem;text-shadow:2px 2px 0 var(--bark);}
-.hero-badges{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:2rem;}
-.badge{background:var(--bark);border:2px solid var(--wood);padding:6px 14px;font-family:'Press Start 2P',monospace;font-size:9px;color:var(--smoke);box-shadow:3px 3px 0 var(--soil);}
-.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
-.cta-btn{display:inline-block;font-family:'Press Start 2P',monospace;font-size:12px;padding:16px 28px;color:var(--cream);text-decoration:none;border:3px solid;box-shadow:4px 4px 0 var(--soil);transition:transform .1s,box-shadow .1s;letter-spacing:2px;cursor:pointer;}
-.cta-btn.green{background:var(--grass);border-color:var(--leaf);}
-.cta-btn.amber{background:var(--bark);border-color:var(--straw);}
-.cta-btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--soil);}
-.cta-btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--soil);}
-.scroll-hint{position:absolute;bottom:260px;left:50%;transform:translateX(-50%);font-family:'Press Start 2P',monospace;font-size:8px;color:var(--smoke);opacity:.6;animation:bounce 2s infinite;z-index:10;}
-@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
-.clouds{position:absolute;top:15%;width:100%;pointer-events:none;}
-.cloud{position:absolute;background:#fde8c0;opacity:.6;border-radius:10px;animation:drift linear infinite;}
-@keyframes drift{from{transform:translateX(-120px)}to{transform:translateX(110vw)}}
-
-/* ===== SECTIONS ===== */
-section{max-width:1100px;margin:0 auto;padding:70px 24px;}
-.section-title{font-family:'Press Start 2P',monospace;font-size:clamp(.9rem,2.5vw,1.5rem);color:var(--gold);text-shadow:3px 3px 0 var(--bark);margin-bottom:40px;display:flex;align-items:center;gap:16px;}
-.section-title::after{content:'';flex:1;height:3px;background:repeating-linear-gradient(90deg,var(--wood) 0,var(--wood) 8px,transparent 8px,transparent 16px);}
-.px-divider{width:100%;height:4px;background:repeating-linear-gradient(90deg,var(--soil) 0,var(--soil) 4px,var(--bark) 4px,var(--bark) 8px,var(--wood) 8px,var(--wood) 12px,var(--bark) 12px,var(--bark) 16px);}
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
-.reveal.visible{opacity:1;transform:none;}
-
-.mechanics{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px;}
-.mechanic-card{background:var(--bark);border:2px solid var(--wood);padding:22px 18px;position:relative;box-shadow:4px 4px 0 var(--soil);transition:transform .2s,box-shadow .2s;}
-.mechanic-card:hover{transform:translate(-3px,-3px);box-shadow:7px 7px 0 var(--soil);}
-.mechanic-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--straw);}
-.mechanic-icon{font-size:2.8rem;display:block;margin-bottom:10px;}
-.mechanic-title{font-family:'Press Start 2P',monospace;font-size:9px;color:var(--straw);margin-bottom:8px;}
-.mechanic-desc{font-size:14px;color:var(--smoke);line-height:1.6;}
-
-.res-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px;}
-.res-card{background:var(--bark);border:2px solid var(--wood);padding:14px;display:flex;flex-direction:column;gap:6px;box-shadow:3px 3px 0 var(--soil);}
-.res-emoji{font-size:2rem;} .res-name{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--gold);}
-.res-src{font-size:13px;color:var(--smoke);line-height:1.4;} .res-use{font-size:12px;color:var(--straw);border-top:1px dashed var(--wood);padding-top:5px;}
-
-.buildings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;}
-.bld-card{background:var(--bark);border:2px solid var(--wood);padding:16px;display:flex;gap:12px;align-items:flex-start;box-shadow:3px 3px 0 var(--soil);transition:transform .15s,border-color .15s;}
-.bld-card:hover{transform:translate(-2px,-2px);border-color:var(--straw);}
-.bld-emoji{font-size:2.2rem;flex-shrink:0;}
-.bld-name{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--straw);margin-bottom:5px;}
-.bld-cost{font-size:12px;color:var(--smoke);margin-bottom:3px;} .bld-effect{font-size:12px;color:var(--grass);}
-.bld-card.final{border-color:var(--gold);background:#3a2505;} .bld-card.final .bld-name{color:var(--gold);}
-
-.roadmap{position:relative;padding-left:38px;}
-.roadmap::before{content:'';position:absolute;left:10px;top:8px;bottom:8px;width:3px;background:repeating-linear-gradient(180deg,var(--wood) 0,var(--wood) 12px,transparent 12px,transparent 20px);}
-.milestone{position:relative;margin-bottom:24px;background:var(--bark);border:2px solid var(--wood);padding:16px 48px 16px 18px;box-shadow:3px 3px 0 var(--soil);}
-.milestone::before{content:'';position:absolute;left:-34px;top:50%;transform:translateY(-50%);width:16px;height:16px;background:var(--wood);border:3px solid var(--straw);box-shadow:2px 2px 0 var(--soil);}
-.milestone.done::before{background:var(--grass);border-color:var(--gold);}
-.milestone.done{border-color:var(--grass);}
-.ms-week{font-family:'Press Start 2P',monospace;font-size:8px;color:var(--straw);margin-bottom:5px;}
-.ms-goal{font-size:15px;color:var(--cream);font-weight:600;margin-bottom:3px;}
-.ms-result{font-size:12px;color:var(--smoke);}
-.ms-check{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:1.3rem;}
-
-footer{background:var(--ink);border-top:3px solid var(--wood);text-align:center;padding:48px 24px;}
-.footer-title{font-family:'Press Start 2P',monospace;font-size:clamp(1.1rem,3.5vw,1.8rem);color:var(--gold);text-shadow:3px 3px 0 var(--bark);margin-bottom:10px;}
-.footer-sub{font-size:15px;color:var(--smoke);margin-bottom:28px;}
-.footer-links{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:28px;}
-.footer-link{font-family:'Press Start 2P',monospace;font-size:9px;padding:11px 18px;text-decoration:none;background:var(--bark);border:2px solid var(--wood);color:var(--smoke);box-shadow:3px 3px 0 rgba(0,0,0,.5);transition:all .15s;}
-.footer-link:hover{border-color:var(--straw);color:var(--gold);}
-.made-in{font-size:13px;color:var(--wood);letter-spacing:2px;}
-
-/* ===== GAME OVERLAY ===== */
-#game-overlay{display:none;position:fixed;inset:0;z-index:500;background:#050a05;flex-direction:column;}
-#game-overlay.active{display:flex;}
-
-#game-header{background:#111a11;border-bottom:2px solid #2a4a2a;padding:6px 14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;flex-shrink:0;}
-#game-header h1{font-family:'Press Start 2P',monospace;font-size:10px;color:#4cff6a;text-shadow:0 0 10px #4cff6a;letter-spacing:2px;}
-.gres{display:flex;align-items:center;gap:5px;font-size:19px;}
-.gres span{min-width:32px;color:#ffd84c;font-family:'Press Start 2P',monospace;font-size:9px;}
-.close-game{margin-left:auto;font-family:'Press Start 2P',monospace;font-size:8px;padding:7px 14px;background:#2a0a0a;color:#ff6a6a;border:2px solid #6a2a2a;cursor:pointer;box-shadow:2px 2px 0 #000;transition:all .1s;}
-.close-game:hover{background:#3a0a0a;transform:translate(-1px,-1px);}
-
-#game-main{display:flex;flex:1;overflow:hidden;}
-
-#game-sidebar{width:200px;background:#111a11;border-right:2px solid #2a4a2a;display:flex;flex-direction:column;padding:7px;gap:5px;overflow-y:auto;flex-shrink:0;}
-#game-sidebar h2{font-family:'Press Start 2P',monospace;font-size:7px;color:#7a9a7a;margin:5px 0 2px;letter-spacing:1px;}
-.gbtn{background:#0d1a0d;border:1.5px solid #2a4a2a;color:#4cff6a;font-family:'Pixelify Sans',monospace;font-size:15px;padding:6px 7px;cursor:pointer;text-align:left;transition:all .1s;border-radius:2px;display:flex;flex-direction:column;gap:1px;}
-.gbtn:hover{border-color:#4cff6a;background:#152015;}
-.gbtn.active{border-color:#ffd84c;background:#1a1a00;color:#ffd84c;}
-.gbtn.disabled{opacity:.4;cursor:not-allowed;}
-.gbtn .gcost{font-size:12px;color:#7a9a7a;}
-.gbtn .gname{font-size:14px;}
-.tool-gbtn{background:#0d0d1a;border:1.5px solid #2a2a4a;color:#8080ff;font-family:'Pixelify Sans',monospace;font-size:15px;padding:6px 7px;cursor:pointer;text-align:left;transition:all .1s;border-radius:2px;}
-.tool-gbtn:hover{border-color:#8080ff;background:#15152a;}
-.tool-gbtn.active{border-color:#ffd84c;background:#1a1a00;color:#ffd84c;}
-.gsep{width:100%;height:1px;background:#2a4a2a;margin:1px 0;}
-#gtip{padding:4px 6px;font-size:12px;color:#446644;text-align:center;line-height:1.4;}
-
-#canvas-wrap{flex:1;overflow:hidden;position:relative;background:#050a05;}
-canvas{display:block;image-rendering:pixelated;}
-#glog{position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,.75);border:1px solid #2a4a2a;padding:5px 9px;font-size:14px;max-width:290px;pointer-events:none;border-radius:2px;}
-#glog div{opacity:.7;font-size:13px;}
-#glog div:last-child{opacity:1;color:#ffd84c;}
-#gcoords{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.65);border:1px solid #2a4a2a;padding:3px 7px;font-size:13px;pointer-events:none;}
-#gday{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.65);border:1px solid #2a4a2a;padding:4px 9px;font-family:'Press Start 2P',monospace;font-size:7px;color:#ffd84c;pointer-events:none;}
-
-@media(max-width:600px){
-  #game-sidebar{width:160px;}
-  .gbtn .gcost{font-size:10px;}
-  #game-header{gap:8px;}
-  .gres span{font-size:8px;}
+/* ====== LANDING ====== */
+#landing{
+  position:fixed;inset:0;z-index:100;
+  background:linear-gradient(160deg,var(--sky1) 0%,var(--sky2) 55%,var(--dark-green) 55%,var(--ground) 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:0;overflow:hidden;
+  transition:transform .6s cubic-bezier(.77,0,.18,1),opacity .5s;
 }
+#landing.hide{transform:scale(1.08);opacity:0;pointer-events:none;}
+
+/* Clouds */
+.cloud{position:absolute;background:rgba(255,255,255,.85);border-radius:50px;animation:drift linear infinite;}
+.cloud::before,.cloud::after{content:'';position:absolute;background:inherit;border-radius:50%;}
+@keyframes drift{from{transform:translateX(-200px)}to{transform:translateX(110vw)}}
+
+/* Ground decorations */
+.land-tree{position:absolute;bottom:0;font-size:clamp(3rem,8vw,6rem);animation:sway 3s ease-in-out infinite alternate;transform-origin:bottom center;}
+@keyframes sway{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}
+
+/* Title card */
+.title-card{
+  background:linear-gradient(170deg,#fffde7,#fff8c5);
+  border:4px solid var(--gold2);
+  border-radius:24px;
+  padding:clamp(12px,3vw,28px) clamp(24px,6vw,64px);
+  box-shadow:0 8px 0 var(--dark-gold),0 12px 40px rgba(0,0,0,.35);
+  text-align:center;
+  position:relative;
+  margin-bottom:clamp(16px,3vh,32px);
+  animation:floatY 3s ease-in-out infinite;
+}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.title-card::before{content:'⚔️';position:absolute;left:-20px;top:50%;transform:translateY(-50%);font-size:2rem;}
+.title-card::after{content:'🛡️';position:absolute;right:-20px;top:50%;transform:translateY(-50%);font-size:2rem;}
+
+.game-title{
+  font-family:'Lilita One',cursive;
+  font-size:clamp(2.5rem,9vw,6rem);
+  color:var(--shadow);
+  text-shadow:3px 3px 0 var(--gold2),5px 5px 0 rgba(0,0,0,.2);
+  letter-spacing:2px;
+  line-height:1;
+}
+.game-subtitle{
+  font-size:clamp(.9rem,2.5vw,1.3rem);
+  color:#555;
+  font-weight:800;
+  letter-spacing:1px;
+  margin-top:6px;
+}
+
+/* Feature pills */
+.features{display:flex;gap:clamp(6px,1.5vw,14px);justify-content:center;flex-wrap:wrap;margin-bottom:clamp(16px,3vh,28px);}
+.feat{
+  background:linear-gradient(135deg,#fff,#f0f0f0);
+  border:2px solid #ddd;
+  border-radius:50px;
+  padding:6px 16px;
+  font-size:clamp(.75rem,1.8vw,1rem);
+  font-weight:800;
+  color:#333;
+  box-shadow:0 3px 0 #ccc;
+  white-space:nowrap;
+}
+
+/* PLAY BUTTON */
+.play-btn{
+  font-family:'Lilita One',cursive;
+  font-size:clamp(1.4rem,4vw,2.2rem);
+  padding:clamp(14px,2.5vh,22px) clamp(40px,8vw,90px);
+  background:linear-gradient(180deg,#5cde5c,#27ae60);
+  color:white;
+  border:none;
+  border-radius:60px;
+  cursor:pointer;
+  letter-spacing:2px;
+  box-shadow:0 6px 0 #1a7a40,0 10px 30px rgba(0,0,0,.3);
+  transition:transform .1s,box-shadow .1s;
+  position:relative;
+  overflow:hidden;
+  display:flex;align-items:center;gap:14px;
+  text-shadow:1px 2px 0 rgba(0,0,0,.3);
+}
+.play-btn::before{content:'';position:absolute;top:0;left:0;right:0;height:45%;background:rgba(255,255,255,.25);border-radius:60px 60px 50% 50%;}
+.play-btn:hover{transform:translateY(-3px);box-shadow:0 9px 0 #1a7a40,0 14px 40px rgba(0,0,0,.35);}
+.play-btn:active{transform:translateY(3px);box-shadow:0 3px 0 #1a7a40,0 5px 15px rgba(0,0,0,.3);}
+.play-icon{font-size:clamp(1.8rem,5vw,2.8rem);}
+
+.small-btns{display:flex;gap:12px;margin-top:14px;justify-content:center;}
+.sm-btn{font-family:'Lilita One',cursive;font-size:clamp(.8rem,2vw,1rem);padding:8px 22px;border-radius:40px;border:none;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.3);transition:transform .1s,box-shadow .1s;color:white;text-shadow:1px 1px 0 rgba(0,0,0,.3);}
+.sm-btn:hover{transform:translateY(-2px);}
+.sm-btn:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.3);}
+.sm-btn.blue{background:linear-gradient(180deg,#5bb8f5,var(--btn-blue));box-shadow:0 4px 0 #1a5a8a;}
+.sm-btn.purple{background:linear-gradient(180deg,#c39bd3,var(--purple));box-shadow:0 4px 0 #6c3483;}
+
+/* Version badge */
+.version{position:absolute;bottom:16px;font-size:.8rem;color:rgba(255,255,255,.7);font-weight:800;letter-spacing:1px;}
+
+/* ====== GAME ====== */
+#game{
+  position:fixed;inset:0;z-index:50;
+  display:none;flex-direction:column;
+  background:#1a3a1a;
+}
+#game.active{display:flex;}
+
+/* Top HUD */
+#hud-top{
+  height:56px;
+  background:linear-gradient(180deg,#2c1810,#1a0e08);
+  border-bottom:3px solid var(--gold2);
+  display:flex;align-items:center;
+  padding:0 10px;gap:6px;
+  flex-shrink:0;
+  position:relative;
+  z-index:10;
+}
+.hud-res{
+  display:flex;align-items:center;gap:5px;
+  background:rgba(0,0,0,.4);
+  border:2px solid rgba(255,180,0,.4);
+  border-radius:20px;
+  padding:4px 10px;
+  min-width:70px;
+}
+.hud-res-icon{font-size:1.3rem;}
+.hud-res-val{font-family:'Lilita One',cursive;font-size:.95rem;color:var(--gold);text-shadow:1px 1px 0 #000;}
+.hud-day{
+  font-family:'Lilita One',cursive;font-size:1rem;color:var(--gold);
+  background:rgba(0,0,0,.5);border:2px solid var(--gold2);
+  border-radius:20px;padding:4px 14px;text-shadow:1px 1px 0 #000;
+  margin-left:auto;
+}
+.hud-back{
+  font-family:'Lilita One',cursive;font-size:.85rem;
+  background:linear-gradient(180deg,#e74c3c,#c0392b);
+  color:white;border:none;border-radius:20px;
+  padding:6px 14px;cursor:pointer;
+  box-shadow:0 3px 0 #7b241c;
+  transition:transform .1s;margin-left:8px;
+  text-shadow:1px 1px 0 rgba(0,0,0,.3);
+}
+.hud-back:hover{transform:translateY(-1px);}
+.hud-back:active{transform:translateY(1px);box-shadow:0 1px 0 #7b241c;}
+
+/* Game area */
+#game-area{display:flex;flex:1;overflow:hidden;}
+
+/* Bottom build panel */
+#build-panel{
+  height:88px;
+  background:linear-gradient(180deg,#3d2010,#2a1508);
+  border-top:3px solid var(--gold2);
+  display:flex;align-items:center;
+  padding:0 8px;gap:6px;
+  overflow-x:auto;
+  flex-shrink:0;
+  position:relative;
+  z-index:10;
+}
+#build-panel::-webkit-scrollbar{height:3px;}
+#build-panel::-webkit-scrollbar-thumb{background:var(--gold2);border-radius:2px;}
+
+.panel-section{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.panel-label{font-family:'Lilita One',cursive;font-size:.7rem;color:rgba(255,200,0,.7);writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);padding:0 2px;letter-spacing:1px;}
+.panel-sep{width:2px;height:60px;background:rgba(255,180,0,.25);border-radius:1px;flex-shrink:0;margin:0 2px;}
+
+.bld-btn{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  width:68px;height:72px;
+  background:linear-gradient(180deg,#5a3015,#3d1f0a);
+  border:2px solid rgba(255,180,0,.5);
+  border-radius:12px;
+  cursor:pointer;gap:2px;
+  box-shadow:0 3px 0 rgba(0,0,0,.5);
+  transition:transform .1s,border-color .1s,box-shadow .1s;
+  position:relative;flex-shrink:0;
+}
+.bld-btn:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 6px 0 rgba(0,0,0,.5);}
+.bld-btn:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.5);}
+.bld-btn.active{border-color:var(--gold);background:linear-gradient(180deg,#7a4a20,#5a2d0a);box-shadow:0 3px 12px rgba(255,180,0,.4);}
+.bld-btn.locked{opacity:.4;cursor:not-allowed;filter:grayscale(.8);}
+.bld-btn.locked:hover{transform:none;}
+.bld-icon{font-size:1.8rem;line-height:1;}
+.bld-name{font-family:'Lilita One',cursive;font-size:.55rem;color:var(--cream);text-align:center;letter-spacing:.5px;}
+.bld-cost{font-size:.52rem;color:rgba(255,220,100,.8);font-weight:800;text-align:center;line-height:1.2;}
+.bld-btn .lock-icon{position:absolute;top:2px;right:4px;font-size:.7rem;}
+
+.tool-btn{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  width:56px;height:72px;
+  background:linear-gradient(180deg,#1a3a5a,#0d1f3a);
+  border:2px solid rgba(100,160,255,.4);
+  border-radius:12px;cursor:pointer;gap:3px;
+  box-shadow:0 3px 0 rgba(0,0,0,.5);
+  transition:transform .1s,border-color .1s;
+  flex-shrink:0;
+}
+.tool-btn:hover{transform:translateY(-3px);border-color:#64a0ff;}
+.tool-btn.active{border-color:#64a0ff;background:linear-gradient(180deg,#2a4a7a,#1a2f5a);box-shadow:0 3px 12px rgba(100,160,255,.3);}
+.tool-icon{font-size:1.5rem;}
+.tool-name{font-family:'Lilita One',cursive;font-size:.52rem;color:#aaddff;letter-spacing:.5px;}
+
+/* Canvas */
+#canvas-wrap{flex:1;overflow:hidden;position:relative;}
+canvas{display:block;image-rendering:pixelated;cursor:crosshair;}
+
+/* Log */
+#glog{
+  position:absolute;bottom:10px;right:10px;
+  background:rgba(0,0,0,.75);
+  border:2px solid rgba(255,180,0,.3);
+  border-radius:10px;
+  padding:7px 12px;font-size:.8rem;
+  max-width:260px;pointer-events:none;
+  backdrop-filter:blur(4px);
+}
+#glog div{color:rgba(255,255,220,.65);line-height:1.5;}
+#glog div:last-child{color:var(--gold);font-weight:800;}
+
+/* Tooltip */
+#tooltip{
+  position:absolute;
+  background:rgba(20,10,5,.9);
+  border:2px solid var(--gold2);
+  border-radius:10px;
+  padding:6px 12px;
+  font-size:.78rem;color:var(--cream);
+  pointer-events:none;display:none;
+  font-weight:800;white-space:nowrap;
+  box-shadow:0 4px 16px rgba(0,0,0,.5);
+}
+
+/* Floating +res text */
+.float-text{
+  position:absolute;
+  font-family:'Lilita One',cursive;
+  font-size:1.1rem;
+  color:var(--gold);
+  text-shadow:1px 1px 0 #000,2px 2px 0 rgba(0,0,0,.3);
+  pointer-events:none;
+  animation:floatUp .9s ease-out forwards;
+  z-index:20;
+}
+@keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-55px) scale(1.2)}}
+
+/* Win screen */
+#win-screen{
+  display:none;position:absolute;inset:0;
+  background:rgba(0,0,0,.7);
+  z-index:50;align-items:center;justify-content:center;
+  backdrop-filter:blur(6px);
+}
+#win-screen.show{display:flex;}
+.win-card{
+  background:linear-gradient(160deg,#fffde7,#fff8c5);
+  border:5px solid var(--gold);
+  border-radius:24px;
+  padding:40px 60px;
+  text-align:center;
+  box-shadow:0 12px 0 var(--dark-gold),0 20px 60px rgba(0,0,0,.5);
+  animation:popIn .5s cubic-bezier(.175,.885,.32,1.275);
+}
+@keyframes popIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.win-title{font-family:'Lilita One',cursive;font-size:3rem;color:var(--shadow);text-shadow:3px 3px 0 var(--gold2);}
+.win-sub{font-size:1.1rem;color:#555;font-weight:800;margin:10px 0 24px;}
+.win-btn{font-family:'Lilita One',cursive;font-size:1.2rem;padding:14px 36px;background:linear-gradient(180deg,#5cde5c,#27ae60);color:white;border:none;border-radius:40px;cursor:pointer;box-shadow:0 5px 0 #1a7a40;transition:transform .1s;}
+.win-btn:hover{transform:translateY(-2px);}
+
+@media(orientation:portrait){
+  #portrait-warn{display:flex;}
+}
+#portrait-warn{
+  display:none;position:fixed;inset:0;z-index:999;
+  background:#1a0e08;align-items:center;justify-content:center;flex-direction:column;gap:20px;
+}
+.pw-icon{font-size:4rem;animation:rotateHint 2s ease-in-out infinite;}
+@keyframes rotateHint{0%,100%{transform:rotate(0deg)}50%{transform:rotate(90deg)}}
+.pw-text{font-family:'Lilita One',cursive;font-size:1.4rem;color:var(--gold);text-align:center;padding:0 30px;text-shadow:2px 2px 0 #000;}
+
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a href="#hero" class="nav-logo">🏘 ХАТИНГРАД</a>
-  <ul class="nav-links">
-    <li><a href="#mechanics">Механіки</a></li>
-    <li><a href="#resources">Ресурси</a></li>
-    <li><a href="#buildings">Будівлі</a></li>
-    <li><a href="#roadmap">Дорожня карта</a></li>
-  </ul>
-  <button class="play-nav-btn" onclick="openGame()">▶ ГРАТИ</button>
-</nav>
-
-<!-- HERO -->
-<div id="hero">
-  <div class="stars" id="stars"></div>
-  <div class="clouds">
-    <div class="cloud" style="width:60px;height:16px;top:10px;left:5%;animation-duration:32s;"></div>
-    <div class="cloud" style="width:80px;height:18px;top:28px;left:35%;animation-duration:48s;opacity:.4;"></div>
-    <div class="cloud" style="width:50px;height:13px;top:8px;left:65%;animation-duration:38s;"></div>
-  </div>
-  <div class="skyline">
-    <div class="bsil" style="width:40px;height:180px;margin-right:2px;">
-      <div style="position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:15px;height:60px;background:var(--ink);"></div>
-      <div style="position:absolute;top:-90px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:32px solid var(--ink);"></div>
-      <div class="win" style="width:8px;height:10px;top:20px;left:8px;"></div>
-      <div class="win" style="width:8px;height:10px;top:20px;right:8px;animation-delay:.7s;"></div>
-    </div>
-    <div class="bsil" style="width:80px;height:100px;margin-right:4px;">
-      <div style="position:absolute;top:-40px;left:0;right:0;height:0;border-left:0 solid transparent;border-right:80px solid transparent;border-bottom:40px solid var(--ink);"></div>
-      <div class="win" style="width:12px;height:14px;top:15px;left:14px;animation-delay:.3s;"></div>
-      <div class="win" style="width:12px;height:14px;top:15px;right:14px;animation-delay:1.1s;"></div>
-      <div class="smoke-puff"></div><div class="smoke-puff" style="animation-delay:1.5s;left:40%;"></div>
-    </div>
-    <div class="bsil" style="width:60px;height:140px;margin-right:2px;">
-      <div class="win" style="width:10px;height:12px;top:18px;left:10px;animation-delay:.5s;"></div>
-      <div class="win" style="width:10px;height:12px;top:18px;right:10px;animation-delay:1.8s;"></div>
-      <div class="win" style="width:10px;height:12px;top:48px;left:10px;animation-delay:.9s;"></div>
-    </div>
-    <div class="bsil" style="width:70px;height:90px;margin-right:4px;">
-      <div style="position:absolute;top:-35px;left:0;right:0;height:0;border-left:35px solid transparent;border-right:35px solid transparent;border-bottom:35px solid var(--ink);"></div>
-      <div class="win" style="width:10px;height:12px;top:16px;left:15px;animation-delay:1.3s;"></div>
-      <div class="win" style="width:10px;height:12px;top:16px;right:15px;animation-delay:.2s;"></div>
-    </div>
-    <div class="bsil" style="width:36px;height:200px;margin-right:2px;">
-      <div style="position:absolute;top:-20px;left:0;right:0;height:20px;background:var(--ink);"></div>
-      <div class="win" style="width:8px;height:10px;top:25px;left:14px;animation-delay:.6s;"></div>
-      <div class="win" style="width:8px;height:10px;top:60px;left:14px;animation-delay:1.4s;"></div>
-    </div>
-    <div class="bsil" style="width:90px;height:80px;">
-      <div style="position:absolute;top:-38px;left:0;right:0;height:0;border-left:0 solid transparent;border-right:90px solid transparent;border-bottom:38px solid var(--ink);"></div>
-      <div class="win" style="width:12px;height:14px;top:12px;left:18px;animation-delay:1.7s;"></div>
-      <div class="win" style="width:12px;height:14px;top:12px;right:18px;animation-delay:.4s;"></div>
-      <div class="smoke-puff" style="left:30%;"></div>
-    </div>
-  </div>
-  <div class="hero-content">
-    <h1 class="hero-title">🏘 ХАТИНГРАД</h1>
-    <p class="hero-sub">Від маленької хатинки — до великого граду!</p>
-    <div class="hero-badges">
-      <div class="badge">📱 МОБАЙЛ + БРАУЗЕР</div>
-      <div class="badge">🎮 TOP-DOWN</div>
-      <div class="badge">🇺🇦 УКРАЇНСЬКА ГРА</div>
-    </div>
-    <div class="cta-btns">
-      <button class="cta-btn green" onclick="openGame()">▶ ГРАТИ ЗАРАЗ</button>
-      <a href="#mechanics" class="cta-btn amber">📖 ПРО ГРУ</a>
-    </div>
-  </div>
-  <div class="scroll-hint">▼ ГОРТАЙ ВНИЗ ▼</div>
+<!-- Portrait warning -->
+<div id="portrait-warn">
+  <div class="pw-icon">📱</div>
+  <div class="pw-text">Поверни телефон горизонтально!</div>
 </div>
 
-<div class="px-divider"></div>
+<!-- ====== LANDING ====== -->
+<div id="landing">
+  <!-- Clouds -->
+  <div class="cloud" style="width:120px;height:40px;top:8%;left:5%;animation-duration:28s;"></div>
+  <div class="cloud" style="width:80px;height:28px;top:18%;left:30%;animation-duration:42s;opacity:.7;"></div>
+  <div class="cloud" style="width:150px;height:50px;top:12%;left:60%;animation-duration:35s;"></div>
+  <div class="cloud" style="width:90px;height:30px;top:5%;left:80%;animation-duration:50s;opacity:.6;"></div>
 
-<!-- MECHANICS -->
-<section id="mechanics">
-  <h2 class="section-title reveal">⚙ МЕХАНІКИ</h2>
-  <div class="mechanics">
-    <div class="mechanic-card reveal"><span class="mechanic-icon">⛏</span><div class="mechanic-title">ВИДОБУТОК</div><p class="mechanic-desc">Тапай/клікай по деревах, каменях і рудних жилах. Кожен ресурс — цегла у фундаменті міста.</p></div>
-    <div class="mechanic-card reveal"><span class="mechanic-icon">🏗</span><div class="mechanic-title">БУДІВНИЦТВО</div><p class="mechanic-desc">Вибери будівлю з панелі — тапни по вільній клітинці. Місто росте тайл за тайлом.</p></div>
-    <div class="mechanic-card reveal"><span class="mechanic-icon">📅</span><div class="mechanic-title">ДЕННИЙ ЦИКЛ</div><p class="mechanic-desc">Удень збирай ресурси. Вночі будівлі автоматично виробляють ресурси, населення споживає їжу.</p></div>
-    <div class="mechanic-card reveal"><span class="mechanic-icon">👷</span><div class="mechanic-title">НАСЕЛЕННЯ</div><p class="mechanic-desc">Будуй хати — зростає ліміт жителів. Будуй ферми — годуй їх. Більше людей = швидший розвиток.</p></div>
-    <div class="mechanic-card reveal"><span class="mechanic-icon">🗺</span><div class="mechanic-title">РАНДОМНА КАРТА</div><p class="mechanic-desc">Кожна гра унікальна. Процедурно генерований світ: ліси, річки, гори, рудні поклади.</p></div>
-    <div class="mechanic-card reveal"><span class="mechanic-icon">🏆</span><div class="mechanic-title">МЕТА</div><p class="mechanic-desc">Збудуй Ратушу — відкрий технології. Досягни рівня «Велике Місто» і переможи!</p></div>
+  <!-- Trees -->
+  <div class="land-tree" style="left:2%;animation-delay:0s;font-size:clamp(3rem,6vw,5rem);">🌲</div>
+  <div class="land-tree" style="left:6%;animation-delay:.3s;font-size:clamp(2.5rem,5vw,4rem);">🌳</div>
+  <div class="land-tree" style="left:10%;animation-delay:.8s;font-size:clamp(2rem,4vw,3rem);">🌲</div>
+  <div class="land-tree" style="right:2%;animation-delay:.5s;font-size:clamp(3rem,6vw,5rem);">🌳</div>
+  <div class="land-tree" style="right:7%;animation-delay:.1s;font-size:clamp(2.5rem,5vw,4rem);">🌲</div>
+  <div class="land-tree" style="right:13%;animation-delay:.9s;font-size:clamp(2rem,4vw,3rem);">🌳</div>
+  <div class="land-tree" style="left:16%;bottom:2%;animation-delay:.4s;font-size:clamp(2rem,3.5vw,3rem);">🌲</div>
+  <div class="land-tree" style="right:18%;bottom:2%;animation-delay:.6s;font-size:clamp(2rem,3.5vw,3rem);">🌳</div>
+
+  <!-- Main content -->
+  <div class="title-card">
+    <div class="game-title">🏘 ХАТИНГРАД</div>
+    <div class="game-subtitle">Збудуй своє місто — від хатинки до граду!</div>
   </div>
-</section>
 
-<div class="px-divider"></div>
-
-<!-- RESOURCES -->
-<section id="resources">
-  <h2 class="section-title reveal">🪵 РЕСУРСИ</h2>
-  <div class="res-grid">
-    <div class="res-card reveal"><span class="res-emoji">🪵</span><div class="res-name">ДЕРЕВО</div><div class="res-src">Рубка лісу, Лісопилка</div><div class="res-use">→ Хати, базові будівлі</div></div>
-    <div class="res-card reveal"><span class="res-emoji">🪨</span><div class="res-name">КАМІНЬ</div><div class="res-src">Шахта, Скелі на карті</div><div class="res-use">→ Мури, вежі, дороги</div></div>
-    <div class="res-card reveal"><span class="res-emoji">🌾</span><div class="res-name">ЇЖА</div><div class="res-src">Ферма, дикорослі</div><div class="res-use">→ Утримання населення</div></div>
-    <div class="res-card reveal"><span class="res-emoji">🔩</span><div class="res-name">ЗАЛІЗО</div><div class="res-src">Залізна руда, Кузня</div><div class="res-use">→ Пізні будівлі</div></div>
-    <div class="res-card reveal"><span class="res-emoji">🌿</span><div class="res-name">ТРАВИ</div><div class="res-src">Луки, Аптека</div><div class="res-use">→ Зілля, торгівля</div></div>
-    <div class="res-card reveal"><span class="res-emoji">💎</span><div class="res-name">САМОЦВІТИ</div><div class="res-src">Рідкісні жили</div><div class="res-use">→ Преміум будівлі</div></div>
+  <div class="features">
+    <div class="feat">⛏ Видобуток ресурсів</div>
+    <div class="feat">🏗 Будівництво міста</div>
+    <div class="feat">📅 Денний цикл</div>
+    <div class="feat">🏆 Збудуй Ратушу!</div>
+    <div class="feat">🇺🇦 Українська гра</div>
   </div>
-</section>
 
-<div class="px-divider"></div>
+  <button class="play-btn" onclick="startGame()">
+    <span class="play-icon">⚔️</span>
+    ГРАТИ!
+    <span class="play-icon">🏰</span>
+  </button>
 
-<!-- BUILDINGS -->
-<section id="buildings">
-  <h2 class="section-title reveal">🏛 БУДІВЛІ</h2>
-  <div class="buildings-grid">
-    <div class="bld-card reveal"><span class="bld-emoji">🏕</span><div><div class="bld-name">НАМЕТ</div><div class="bld-cost">— (стартова)</div><div class="bld-effect">Базовий притулок</div></div></div>
-    <div class="bld-card reveal"><span class="bld-emoji">🏠</span><div><div class="bld-name">ХАТА</div><div class="bld-cost">🪵×5 🪨×2</div><div class="bld-effect">+5 макс. населення</div></div></div>
-    <div class="bld-card reveal"><span class="bld-emoji">⛏</span><div><div class="bld-name">ШАХТА</div><div class="bld-cost">🪵×8 🪨×5</div><div class="bld-effect">+1 камінь / день</div></div></div>
-    <div class="bld-card reveal"><span class="bld-emoji">🌾</span><div><div class="bld-name">ФЕРМА</div><div class="bld-cost">🪵×6</div><div class="bld-effect">+2 їжі / день</div></div></div>
-    <div class="bld-card reveal"><span class="bld-emoji">🪵</span><div><div class="bld-name">ЛІСОПИЛКА</div><div class="bld-cost">🪵×4 🪨×3</div><div class="bld-effect">+1 дерево / день</div></div></div>
-    <div class="bld-card reveal"><span class="bld-emoji">🔥</span><div><div class="bld-name">КУЗНЯ</div><div class="bld-cost">🪵×6 🪨×8</div><div class="bld-effect">+1 залізо / день</div></div></div>
-    <div class="bld-card reveal"><span class="bld-emoji">🏪</span><div><div class="bld-name">РИНОК</div><div class="bld-cost">🪵×10 🔩×3</div><div class="bld-effect">Обмін ресурсами</div></div></div>
-    <div class="bld-card reveal"><span class="bld-emoji">🗼</span><div><div class="bld-name">ВЕЖА</div><div class="bld-cost">🪨×12 🔩×5</div><div class="bld-effect">Захист від ворогів</div></div></div>
-    <div class="bld-card final reveal"><span class="bld-emoji">🏛</span><div><div class="bld-name">★ РАТУША ★</div><div class="bld-cost">🪵×20 🪨×30 🔩×10</div><div class="bld-effect">ПЕРЕМОГА!</div></div></div>
+  <div class="small-btns">
+    <button class="sm-btn blue" onclick="scrollToInfo()">📖 Як грати</button>
+    <button class="sm-btn purple">⭐ GitHub</button>
   </div>
-</section>
 
-<div class="px-divider"></div>
+  <div class="version">v1.0 · Хатинград · 2026</div>
+</div>
 
-<!-- ROADMAP -->
-<section id="roadmap">
-  <h2 class="section-title reveal">🗺 ДОРОЖНЯ КАРТА</h2>
-  <div class="roadmap">
-    <div class="milestone done reveal"><div class="ms-week">ТИЖДЕНЬ 0</div><div class="ms-goal">📄 Дизайн-документ та архітектура</div><div class="ms-result">Детальний план готовий</div><span class="ms-check">✅</span></div>
-    <div class="milestone done reveal"><div class="ms-week">ТИЖДЕНЬ 1</div><div class="ms-goal">🎮 Браузерний прототип</div><div class="ms-result">Гра доступна прямо на сайті!</div><span class="ms-check">✅</span></div>
-    <div class="milestone reveal"><div class="ms-week">ТИЖДЕНЬ 2</div><div class="ms-goal">📱 Unity мобільна версія</div><div class="ms-result">Тач-контроль, повноекранний режим</div><span class="ms-check">⬜</span></div>
-    <div class="milestone reveal"><div class="ms-week">ТИЖДЕНЬ 3</div><div class="ms-goal">⚔️ Вороги + захист</div><div class="ms-result">Нічні атаки, вежі, фортеця</div><span class="ms-check">⬜</span></div>
-    <div class="milestone reveal"><div class="ms-week">ТИЖДЕНЬ 4</div><div class="ms-goal">🎵 Звук + анімації + польша</div><div class="ms-result">Аудіо, ефекти, баланс</div><span class="ms-check">⬜</span></div>
-    <div class="milestone reveal"><div class="ms-week">ТИЖДЕНЬ 5</div><div class="ms-goal">🚀 Публікація</div><div class="ms-result">Google Play + App Store</div><span class="ms-check">⬜</span></div>
+<!-- ====== GAME ====== -->
+<div id="game">
+  <!-- HUD top -->
+  <div id="hud-top">
+    <div class="hud-res"><span class="hud-res-icon">🪵</span><span class="hud-res-val" id="r-wood">10</span></div>
+    <div class="hud-res"><span class="hud-res-icon">🪨</span><span class="hud-res-val" id="r-stone">5</span></div>
+    <div class="hud-res"><span class="hud-res-icon">🌾</span><span class="hud-res-val" id="r-food">8</span></div>
+    <div class="hud-res"><span class="hud-res-icon">🔩</span><span class="hud-res-val" id="r-iron">0</span></div>
+    <div class="hud-res"><span class="hud-res-icon">👷</span><span class="hud-res-val"><span id="r-pop">1</span>/<span id="r-max">5</span></span></div>
+    <div class="hud-day" id="hud-day">День 1</div>
+    <button class="hud-back" onclick="backToMenu()">🏠 Меню</button>
   </div>
-</section>
 
-<div class="px-divider"></div>
-
-<footer>
-  <div class="footer-title">🏘 ХАТИНГРАД</div>
-  <p class="footer-sub">Збудуй своє місто. Крапля за краплею, цегла за цеглою.</p>
-  <div class="footer-links">
-    <button class="footer-link" onclick="openGame()" style="cursor:pointer;">▶ ГРАТИ</button>
-    <a href="#" class="footer-link">⭐ GITHUB</a>
-    <a href="docs/Хатинград_GameDesign.docx" class="footer-link">📄 ДИЗАЙН-ДОК</a>
-  </div>
-  <p class="made-in">Зроблено з ❤️ в Україні</p>
-</footer>
-
-<!-- ============================================================ -->
-<!-- GAME OVERLAY -->
-<!-- ============================================================ -->
-<div id="game-overlay">
-  <div id="game-header">
-    <h1>🏘 ХАТИНГРАД</h1>
-    <div class="gres">🪵<span id="r-wood">10</span></div>
-    <div class="gres">🪨<span id="r-stone">5</span></div>
-    <div class="gres">🌾<span id="r-food">8</span></div>
-    <div class="gres">🔩<span id="r-iron">0</span></div>
-    <div class="gres">👷<span id="r-pop">1</span>/<span id="r-maxpop">5</span></div>
-    <button class="close-game" onclick="closeGame()">✕ ВИЙТИ</button>
-  </div>
-  <div id="game-main">
-    <div id="game-sidebar">
-      <h2>⚒ ІНСТРУМЕНТИ</h2>
-      <button class="tool-gbtn active" id="tool-dig" onclick="selectTool('dig')">⛏ Видобувати</button>
-      <button class="tool-gbtn" id="tool-demolish" onclick="selectTool('demolish')">💥 Знести</button>
-      <div class="gsep"></div>
-      <h2>🏗 БУДІВЛІ</h2>
-      <button class="gbtn" id="btn-house" onclick="selectBuild('house')"><span class="gname">🏠 Хата</span><span class="gcost">🪵×5 🪨×2 → +5 нас.</span></button>
-      <button class="gbtn" id="btn-mine" onclick="selectBuild('mine')"><span class="gname">⛏ Шахта</span><span class="gcost">🪵×8 🪨×5 → камінь</span></button>
-      <button class="gbtn" id="btn-farm" onclick="selectBuild('farm')"><span class="gname">🌾 Ферма</span><span class="gcost">🪵×6 → їжа</span></button>
-      <button class="gbtn" id="btn-sawmill" onclick="selectBuild('sawmill')"><span class="gname">🪵 Лісопилка</span><span class="gcost">🪵×4 🪨×3 → дерево</span></button>
-      <button class="gbtn" id="btn-forge" onclick="selectBuild('forge')"><span class="gname">🔥 Кузня</span><span class="gcost">🪵×6 🪨×8 → залізо</span></button>
-      <button class="gbtn" id="btn-tower" onclick="selectBuild('tower')"><span class="gname">🗼 Вежа</span><span class="gcost">🪨×12 🔩×5</span></button>
-      <button class="gbtn" id="btn-townhall" onclick="selectBuild('townhall')"><span class="gname">🏛 Ратуша</span><span class="gcost">🪵×20 🪨×30 🔩×10</span></button>
-      <button class="gbtn" id="btn-road" onclick="selectBuild('road')"><span class="gname">🛤 Дорога</span><span class="gcost">🪨×1</span></button>
-      <div class="gsep"></div>
-      <div id="gtip">ЛКМ — дія<br>ПКМ — скасувати<br>Колесо — скрол</div>
-    </div>
+  <!-- Game area -->
+  <div id="game-area">
     <div id="canvas-wrap">
       <canvas id="gc"></canvas>
       <div id="glog"></div>
-      <div id="gcoords"></div>
-      <div id="gday">ДЕНЬ 1</div>
+      <div id="tooltip"></div>
+      <div id="win-screen">
+        <div class="win-card">
+          <div style="font-size:4rem">🏆</div>
+          <div class="win-title">ПЕРЕМОГА!</div>
+          <div class="win-sub">Ратуша збудована! Хатинград процвітає! 🎉</div>
+          <button class="win-btn" onclick="backToMenu()">🏠 До меню</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom build panel -->
+  <div id="build-panel">
+    <div class="panel-section">
+      <div class="panel-label">ДІЯ</div>
+      <button class="tool-btn active" id="tool-dig" onclick="setTool('dig')">
+        <span class="tool-icon">⛏</span><span class="tool-name">КОПАТИ</span>
+      </button>
+      <button class="tool-btn" id="tool-move" onclick="setTool('move')">
+        <span class="tool-icon">👆</span><span class="tool-name">ОГЛЯД</span>
+      </button>
+      <button class="tool-btn" id="tool-destroy" onclick="setTool('destroy')">
+        <span class="tool-icon">💥</span><span class="tool-name">ЗНЕСТИ</span>
+      </button>
+    </div>
+    <div class="panel-sep"></div>
+    <div class="panel-section">
+      <div class="panel-label">ЖИТЛО</div>
+      <button class="bld-btn" id="btn-house" onclick="setBuild('house')">
+        <span class="bld-icon">🏠</span>
+        <span class="bld-name">ХАТА</span>
+        <span class="bld-cost">🪵5 🪨2</span>
+      </button>
+      <button class="bld-btn" id="btn-fortress" onclick="setBuild('fortress')">
+        <span class="bld-icon">🏰</span>
+        <span class="bld-name">ФОРТЕЦЯ</span>
+        <span class="bld-cost">🪵15 🪨20 🔩5</span>
+      </button>
+    </div>
+    <div class="panel-sep"></div>
+    <div class="panel-section">
+      <div class="panel-label">РЕСУРСИ</div>
+      <button class="bld-btn" id="btn-mine" onclick="setBuild('mine')">
+        <span class="bld-icon">⛏</span>
+        <span class="bld-name">ШАХТА</span>
+        <span class="bld-cost">🪵8 🪨5</span>
+      </button>
+      <button class="bld-btn" id="btn-farm" onclick="setBuild('farm')">
+        <span class="bld-icon">🌾</span>
+        <span class="bld-name">ФЕРМА</span>
+        <span class="bld-cost">🪵6</span>
+      </button>
+      <button class="bld-btn" id="btn-sawmill" onclick="setBuild('sawmill')">
+        <span class="bld-icon">🪚</span>
+        <span class="bld-name">ПИЛОРАМА</span>
+        <span class="bld-cost">🪵4 🪨3</span>
+      </button>
+      <button class="bld-btn" id="btn-forge" onclick="setBuild('forge')">
+        <span class="bld-icon">🔥</span>
+        <span class="bld-name">КУЗНЯ</span>
+        <span class="bld-cost">🪵6 🪨8</span>
+      </button>
+    </div>
+    <div class="panel-sep"></div>
+    <div class="panel-section">
+      <div class="panel-label">ЗАХИСТ</div>
+      <button class="bld-btn" id="btn-tower" onclick="setBuild('tower')">
+        <span class="bld-icon">🗼</span>
+        <span class="bld-name">ВЕЖА</span>
+        <span class="bld-cost">🪨12 🔩5</span>
+      </button>
+      <button class="bld-btn" id="btn-wall" onclick="setBuild('wall')">
+        <span class="bld-icon">🧱</span>
+        <span class="bld-name">СТІНА</span>
+        <span class="bld-cost">🪨2</span>
+      </button>
+    </div>
+    <div class="panel-sep"></div>
+    <div class="panel-section">
+      <div class="panel-label">ОСОБЛИВЕ</div>
+      <button class="bld-btn" id="btn-market" onclick="setBuild('market')">
+        <span class="bld-icon">🏪</span>
+        <span class="bld-name">РИНОК</span>
+        <span class="bld-cost">🪵10 🔩3</span>
+      </button>
+      <button class="bld-btn" id="btn-townhall" onclick="setBuild('townhall')">
+        <span class="bld-icon">🏛</span>
+        <span class="bld-name">РАТУША</span>
+        <span class="bld-cost">🪵20 🪨30 🔩10</span>
+      </button>
+      <button class="bld-btn" id="btn-road" onclick="setBuild('road')">
+        <span class="bld-icon">🛤</span>
+        <span class="bld-name">ДОРОГА</span>
+        <span class="bld-cost">🪨1</span>
+      </button>
     </div>
   </div>
 </div>
 
 <script>
-// ===== LANDING =====
-// Stars
-const starsEl = document.getElementById('stars');
-for (let i = 0; i < 80; i++) {
-  const s = document.createElement('div');
-  s.className = 'star';
-  s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*60}%;animation-delay:${Math.random()*3}s;animation-duration:${1.5+Math.random()*2}s`;
-  starsEl.appendChild(s);
-}
-const obs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: 0.1 });
-document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-window.addEventListener('scroll', () => {
-  document.querySelector('nav').style.opacity = window.scrollY > 60 ? '1' : '0.5';
-});
+// ===== TILE TYPES =====
+const T={GRASS:0,TREE:1,ROCK:2,WATER:3,DIRT:4,IRON:5,HOUSE:10,FORTRESS:11,MINE:12,FARM:13,SAWMILL:14,FORGE:15,TOWER:16,WALL:17,MARKET:18,TOWNHALL:19,ROAD:20};
+const TILE=52, COLS=38, ROWS=22;
 
-// ===== GAME =====
-const TILE = 44, COLS = 34, ROWS = 26;
-const T = { GRASS:0, TREE:1, ROCK:2, WATER:3, DIRT:4, IRON:5, HOUSE:10, MINE:11, FARM:12, SAWMILL:13, FORGE:14, TOWER:15, ROAD:16, TOWNHALL:17 };
-const res = { wood:10, stone:5, food:8, iron:0, pop:1, maxpop:5 };
-let selectedTool = 'dig', selectedBuild = null, day = 1, tick = 0;
-let logs = [], hoverX = -1, hoverY = -1, camX = 0, camY = 0;
-let isDragging = false, dragStart = null, dragCam = null;
-let gameRunning = false, animId = null, tickInterval = null;
-const grid = Array.from({length: ROWS}, () => Array(COLS).fill(T.GRASS));
-const buildings = {};
+// ===== STATE =====
+const res={wood:15,stone:8,food:10,iron:0,pop:2,maxpop:5};
+let tool='dig', build=null, day=1, tick=0;
+let camX=0, camY=0, hoverX=-1, hoverY=-1;
+let isDrag=false, dragS=null, dragC=null, dragMoved=false;
+let gameRunning=false, animId=null, tickInt=null, inited=false;
+let logs=[];
+const grid=Array.from({length:ROWS},()=>Array(COLS).fill(T.GRASS));
+const bldMap={};
 
-function noise(x, y, s=1) { let n=Math.sin(x*127.1+y*311.7+s*74.3)*43758.5453; return n-Math.floor(n); }
+// Building definitions
+const BUILDS={
+  house:    {tile:T.HOUSE,    cost:{wood:5,stone:2},   icon:'🏠', prod:{},        effect:'maxpop+5'},
+  fortress: {tile:T.FORTRESS, cost:{wood:15,stone:20,iron:5}, icon:'🏰', prod:{},  effect:'maxpop+20'},
+  mine:     {tile:T.MINE,     cost:{wood:8,stone:5},   icon:'⛏', prod:{stone:1}},
+  farm:     {tile:T.FARM,     cost:{wood:6},            icon:'🌾', prod:{food:2}},
+  sawmill:  {tile:T.SAWMILL,  cost:{wood:4,stone:3},   icon:'🪚', prod:{wood:1}},
+  forge:    {tile:T.FORGE,    cost:{wood:6,stone:8},   icon:'🔥', prod:{iron:1}},
+  tower:    {tile:T.TOWER,    cost:{stone:12,iron:5},  icon:'🗼', prod:{}},
+  wall:     {tile:T.WALL,     cost:{stone:2},           icon:'🧱', prod:{}},
+  market:   {tile:T.MARKET,   cost:{wood:10,iron:3},   icon:'🏪', prod:{}},
+  townhall: {tile:T.TOWNHALL, cost:{wood:20,stone:30,iron:10}, icon:'🏛', prod:{}, win:true},
+  road:     {tile:T.ROAD,     cost:{stone:1},           icon:'🛤', prod:{}},
+};
 
-function generateWorld() {
-  for (let y=0;y<ROWS;y++) for (let x=0;x<COLS;x++) {
-    const n = noise(x*.15,y*.15,1)*.7 + noise(x*.3,y*.3,5)*.3;
-    if (n<.18) grid[y][x]=T.WATER;
-    else if (n<.4) grid[y][x]=T.GRASS;
-    else if (n<.58) grid[y][x]=T.TREE;
-    else if (n<.73) grid[y][x]=T.ROCK;
-    else grid[y][x]=T.IRON;
+// Tile visuals
+const TCOLOR={
+  [T.GRASS]:'#3d8b3d',[T.TREE]:'#1f5c1f',[T.ROCK]:'#5a5a5a',[T.WATER]:'#1a6aaa',
+  [T.DIRT]:'#8B6914',[T.IRON]:'#3a4a3a',
+  [T.HOUSE]:'#5a3a8a',[T.FORTRESS]:'#3a2a6a',[T.MINE]:'#6a4a1a',[T.FARM]:'#2a6a1a',
+  [T.SAWMILL]:'#7a4a1a',[T.FORGE]:'#6a1a1a',[T.TOWER]:'#2a1a5a',[T.WALL]:'#5a5a5a',
+  [T.MARKET]:'#5a3a1a',[T.TOWNHALL]:'#1a1a4a',[T.ROAD]:'#3a3a3a',
+};
+const TEMOJI={
+  [T.GRASS]:'',[T.TREE]:'🌲',[T.ROCK]:'🪨',[T.WATER]:'💧',[T.DIRT]:'',[T.IRON]:'🪨',
+  [T.HOUSE]:'🏠',[T.FORTRESS]:'🏰',[T.MINE]:'⛏',[T.FARM]:'🌾',
+  [T.SAWMILL]:'🪚',[T.FORGE]:'🔥',[T.TOWER]:'🗼',[T.WALL]:'🧱',
+  [T.MARKET]:'🏪',[T.TOWNHALL]:'🏛',[T.ROAD]:'',
+};
+const TNAME={
+  [T.GRASS]:'Трава',[T.TREE]:'Дерево 🪵',[T.ROCK]:'Камінь 🪨',[T.WATER]:'Вода',[T.DIRT]:'Земля',[T.IRON]:'Залізна руда 🔩',
+  [T.HOUSE]:'Хата',[T.FORTRESS]:'Фортеця',[T.MINE]:'Шахта',[T.FARM]:'Ферма',
+  [T.SAWMILL]:'Пилорама',[T.FORGE]:'Кузня',[T.TOWER]:'Вежа',[T.WALL]:'Стіна',
+  [T.MARKET]:'Ринок',[T.TOWNHALL]:'🏛 РАТУША',[T.ROAD]:'Дорога',
+};
+
+// Terrain colors for CoC look
+const GRASS_VARIANTS=['#3d8b3d','#428a42','#388838','#3f8d3f'];
+const WATER_VARIANTS=['#1a6aaa','#1e72b8','#1660a0'];
+
+// ===== WORLD GEN =====
+function noise(x,y,s=1){let n=Math.sin(x*127.1+y*311.7+s*74.3)*43758.5453;return n-Math.floor(n);}
+function genWorld(){
+  for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++){
+    const n=noise(x*.13,y*.13,1)*.65+noise(x*.28,y*.28,7)*.35;
+    grid[y][x]=n<.14?T.WATER:n<.42?T.GRASS:n<.6?T.TREE:n<.73?T.ROCK:T.IRON;
   }
-  for (let dy=-2;dy<=2;dy++) for (let dx=-2;dx<=2;dx++) {
-    const nx=9+dx, ny=9+dy;
-    if (nx>=0&&ny>=0&&nx<COLS&&ny<ROWS&&grid[ny][nx]!==T.WATER) grid[ny][nx]=T.GRASS;
+  // Clear start area
+  const sx=Math.floor(COLS/2), sy=Math.floor(ROWS/2);
+  for(let dy=-3;dy<=3;dy++) for(let dx=-3;dx<=3;dx++){
+    const nx=sx+dx,ny=sy+dy;
+    if(nx>=0&&ny>=0&&nx<COLS&&ny<ROWS&&grid[ny][nx]!==T.WATER) grid[ny][nx]=T.GRASS;
   }
-  grid[9][9]=T.HOUSE; buildings['9,9']=T.HOUSE;
+  grid[sy][sx]=T.HOUSE; bldMap[`${sx},${sy}`]=T.HOUSE;
+  grid[sy][sx+1]=T.FARM; bldMap[`${sx+1},${sy}`]=T.FARM;
 }
 
-const tileColors = {
-  [T.GRASS]:'#1a3a1a',[T.TREE]:'#0f2a0f',[T.ROCK]:'#2a2a2a',[T.WATER]:'#0a1a3a',
-  [T.DIRT]:'#3a2a1a',[T.IRON]:'#1a2a1a',[T.HOUSE]:'#1a1a2a',[T.MINE]:'#2a1a0a',
-  [T.FARM]:'#1a2a0a',[T.SAWMILL]:'#2a1a0a',[T.FORGE]:'#2a0a0a',[T.TOWER]:'#1a0a2a',
-  [T.ROAD]:'#1e1e1e',[T.TOWNHALL]:'#0a0a2a'
-};
-const tileEmoji = {
-  [T.GRASS]:'',[T.TREE]:'🌲',[T.ROCK]:'🪨',[T.WATER]:'🌊',[T.DIRT]:'',[T.IRON]:'⛏',
-  [T.HOUSE]:'🏠',[T.MINE]:'⛏',[T.FARM]:'🌾',[T.SAWMILL]:'🪵',[T.FORGE]:'🔥',
-  [T.TOWER]:'🗼',[T.ROAD]:'',[T.TOWNHALL]:'🏛'
-};
-const tileLabel = {
-  [T.GRASS]:['Трава','#2a6a2a'],[T.TREE]:['Дерево','#2a7a2a'],[T.ROCK]:['Камінь','#7a7a7a'],
-  [T.WATER]:['Вода','#2a5a9a'],[T.DIRT]:['Земля','#5a3a1a'],[T.IRON]:['Залізна руда','#7a6a5a'],
-  [T.HOUSE]:['Хата','#6a6aaa'],[T.MINE]:['Шахта','#aa6a2a'],[T.FARM]:['Ферма','#4aaa2a'],
-  [T.SAWMILL]:['Лісопилка','#aa7a2a'],[T.FORGE]:['Кузня','#aa4a2a'],[T.TOWER]:['Вежа','#8a4aaa'],
-  [T.ROAD]:['Дорога','#7a7a7a'],[T.TOWNHALL]:['Ратуша','#aaaa4a']
-};
-const buildTypes = {
-  house:    { tile:T.HOUSE,    cost:{wood:5,stone:2},  emoji:'🏠' },
-  mine:     { tile:T.MINE,     cost:{wood:8,stone:5},  emoji:'⛏' },
-  farm:     { tile:T.FARM,     cost:{wood:6},           emoji:'🌾' },
-  sawmill:  { tile:T.SAWMILL,  cost:{wood:4,stone:3},  emoji:'🪵' },
-  forge:    { tile:T.FORGE,    cost:{wood:6,stone:8},  emoji:'🔥' },
-  tower:    { tile:T.TOWER,    cost:{stone:12,iron:5}, emoji:'🗼' },
-  townhall: { tile:T.TOWNHALL, cost:{wood:20,stone:30,iron:10}, emoji:'🏛' },
-  road:     { tile:T.ROAD,     cost:{stone:1},          emoji:'·' },
-};
+// ===== CANVAS =====
+const canvas=document.getElementById('gc'), ctx=canvas.getContext('2d');
+function resize(){const w=document.getElementById('canvas-wrap');canvas.width=w.clientWidth;canvas.height=w.clientHeight;}
+function w2s(tx,ty){return{sx:tx*TILE-camX,sy:ty*TILE-camY};}
+function s2w(sx,sy){return{tx:Math.floor((sx+camX)/TILE),ty:Math.floor((sy+camY)/TILE)};}
+function clamp(){camX=Math.max(0,Math.min(camX,COLS*TILE-canvas.width));camY=Math.max(0,Math.min(camY,ROWS*TILE-canvas.height));}
 
-const canvas = document.getElementById('gc');
-const ctx = canvas.getContext('2d');
+// ===== DRAW =====
+function drawTile(x,y){
+  const{sx,sy}=w2s(x,y);
+  if(sx>canvas.width+TILE||sy>canvas.height+TILE||sx<-TILE||sy<-TILE)return;
+  const t=grid[y][x];
+  const hover=x===hoverX&&y===hoverY;
 
-function resizeCanvas() {
-  const wrap = document.getElementById('canvas-wrap');
-  canvas.width = wrap.clientWidth;
-  canvas.height = wrap.clientHeight;
+  // Base color with slight variation for organic feel
+  const vi=(x*3+y*7)%4;
+  ctx.fillStyle=t===T.GRASS?GRASS_VARIANTS[vi]:t===T.WATER?WATER_VARIANTS[vi%3]:TCOLOR[t]||'#444';
+  ctx.fillRect(sx,sy,TILE,TILE);
+
+  // Subtle terrain texture
+  if(t===T.GRASS){
+    ctx.fillStyle='rgba(0,0,0,.06)';
+    for(let i=0;i<3;i++){
+      const px=((noise(x*4+i,y*6,2)*(TILE-6))|0)+3;
+      const py=((noise(x*6+i,y*3,4)*(TILE-6))|0)+3;
+      ctx.fillRect(sx+px,sy+py,3,2);
+    }
+  } else if(t===T.WATER){
+    const wt=Date.now()/900;
+    ctx.fillStyle='rgba(255,255,255,.12)';
+    const wy=((Math.sin(wt+x*.7+y*.4)*.5+.5)*(TILE*.3)+TILE*.1)|0;
+    ctx.fillRect(sx+4,sy+wy,TILE-8,3);
+    ctx.fillRect(sx+10,sy+wy+8,TILE-20,2);
+  } else if(t===T.ROAD){
+    ctx.fillStyle='#555';
+    ctx.fillRect(sx+2,sy+TILE/2-3,TILE-4,5);
+    ctx.fillRect(sx+TILE/2-3,sy+2,5,TILE-4);
+    ctx.fillStyle='rgba(255,255,100,.2)';
+    ctx.fillRect(sx+TILE/2-1,sy+2,2,TILE-4);
+  } else if(t===T.WALL){
+    // Brick pattern
+    ctx.fillStyle='#888';
+    for(let r=0;r<3;r++){
+      const off=r%2===0?0:TILE/4;
+      ctx.fillRect(sx+off,sy+4+r*14,TILE/2-2,10);
+      ctx.fillRect(sx+off+TILE/2+2,sy+4+r*14,TILE/2-2,10);
+    }
+  }
+
+  // Emoji
+  const em=TEMOJI[t];
+  if(em){
+    ctx.font=`${TILE*.68}px serif`;
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(em,sx+TILE/2,sy+TILE/2+2);
+  }
+
+  // Iron ore indicator
+  if(t===T.IRON){
+    ctx.fillStyle='#8ab';
+    ctx.font=`${TILE*.4}px serif`;
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('⛏',sx+TILE/2,sy+TILE/2);
+  }
+
+  // Grid line
+  ctx.strokeStyle='rgba(0,0,0,.12)';ctx.lineWidth=.5;
+  ctx.strokeRect(sx,sy,TILE,TILE);
+
+  // Hover highlight
+  if(hover){
+    const bdef=build?BUILDS[build]:null;
+    if(bdef&&canAfford(bdef.cost)&&canPlace(x,y)){
+      ctx.fillStyle='rgba(100,255,100,.22)';
+      ctx.fillRect(sx,sy,TILE,TILE);
+      ctx.strokeStyle='rgba(100,255,100,.9)';ctx.lineWidth=2.5;
+      ctx.strokeRect(sx+1,sy+1,TILE-2,TILE-2);
+      // Ghost emoji
+      ctx.font=`${TILE*.65}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.globalAlpha=.6;
+      ctx.fillText(bdef.icon,sx+TILE/2,sy+TILE/2);
+      ctx.globalAlpha=1;
+    } else if(build&&!canPlace(x,y)){
+      ctx.fillStyle='rgba(255,50,50,.2)';
+      ctx.fillRect(sx,sy,TILE,TILE);
+      ctx.strokeStyle='rgba(255,50,50,.8)';ctx.lineWidth=2.5;
+      ctx.strokeRect(sx+1,sy+1,TILE-2,TILE-2);
+    } else {
+      ctx.fillStyle='rgba(255,255,100,.12)';
+      ctx.fillRect(sx,sy,TILE,TILE);
+      ctx.strokeStyle='rgba(255,255,100,.6)';ctx.lineWidth=2;
+      ctx.strokeRect(sx+1,sy+1,TILE-2,TILE-2);
+    }
+  }
 }
 
-function w2s(tx,ty) { return {sx:tx*TILE-camX, sy:ty*TILE-camY}; }
-function s2w(sx,sy) { return {tx:Math.floor((sx+camX)/TILE), ty:Math.floor((sy+camY)/TILE)}; }
-
-function drawGame() {
-  ctx.fillStyle='#050a05';
+function draw(){
+  ctx.fillStyle='#2a5a2a';
   ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  for (let y=0;y<ROWS;y++) for (let x=0;x<COLS;x++) {
-    const {sx,sy} = w2s(x,y);
-    if (sx>canvas.width+TILE||sy>canvas.height+TILE||sx<-TILE||sy<-TILE) continue;
-    const tile = grid[y][x];
-    const hover = x===hoverX && y===hoverY;
-
-    ctx.fillStyle = tileColors[tile]||'#111';
-    ctx.fillRect(sx,sy,TILE-1,TILE-1);
-
-    if (tile===T.GRASS) {
-      ctx.fillStyle='#1e4a1e';
-      for (let i=0;i<4;i++) {
-        ctx.fillRect(sx+((noise(x*3+i,y*5,2)*(TILE-4))|0), sy+((noise(x*7+i,y*2,3)*(TILE-4))|0),2,1);
-      }
-    } else if (tile===T.WATER) {
-      ctx.fillStyle='#0d2a5a';
-      const w=Math.sin(Date.now()/800+x*.8+y*.5)*3+4;
-      ctx.fillRect(sx+2,sy+(w|0),TILE-6,2);
-    } else if (tile===T.ROAD) {
-      ctx.fillStyle='#2a2a2a';
-      ctx.fillRect(sx+2,sy+TILE/2-2,TILE-3,3);
-      ctx.fillRect(sx+TILE/2-2,sy+2,3,TILE-3);
-    }
-
-    const em = tileEmoji[tile];
-    if (em) {
-      ctx.font=`${TILE*.62}px serif`;
-      ctx.textAlign='center'; ctx.textBaseline='middle';
-      ctx.fillText(em, sx+TILE/2, sy+TILE/2+2);
-    }
-
-    if (hover) {
-      const bType = selectedBuild ? buildTypes[selectedBuild] : null;
-      if (bType && canAfford(bType.cost) && canBuild(x,y)) {
-        ctx.fillStyle='rgba(0,255,100,.18)';
-        ctx.fillRect(sx,sy,TILE-1,TILE-1);
-        ctx.font=`${TILE*.55}px serif`;
-        ctx.textAlign='center'; ctx.textBaseline='middle';
-        ctx.fillText(bType.emoji,sx+TILE/2,sy+TILE/2);
-      } else {
-        ctx.fillStyle='rgba(255,255,100,.12)';
-        ctx.fillRect(sx,sy,TILE-1,TILE-1);
-      }
-      ctx.strokeStyle='rgba(255,255,100,.6)';
-      ctx.lineWidth=2;
-      ctx.strokeRect(sx+1,sy+1,TILE-3,TILE-3);
-    }
-  }
-
-  // Grid lines
-  ctx.strokeStyle='rgba(0,70,0,.08)'; ctx.lineWidth=.5;
-  for (let x=0;x<=COLS;x++) { const sx=x*TILE-camX; ctx.beginPath();ctx.moveTo(sx,0);ctx.lineTo(sx,canvas.height);ctx.stroke(); }
-  for (let y=0;y<=ROWS;y++) { const sy=y*TILE-camY; ctx.beginPath();ctx.moveTo(0,sy);ctx.lineTo(canvas.width,sy);ctx.stroke(); }
+  for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++) drawTile(x,y);
 }
 
-function canAfford(cost) { for (const [k,v] of Object.entries(cost)) if ((res[k]||0)<v) return false; return true; }
-function canBuild(x,y) { const t=grid[y]?.[x]; return t!==undefined&&t!==T.WATER&&!(t>=10); }
-function spend(cost) { for (const [k,v] of Object.entries(cost)) res[k]-=v; }
+// ===== LOGIC =====
+function canAfford(c){for(const[k,v]of Object.entries(c))if((res[k]||0)<v)return false;return true;}
+function canPlace(x,y){const t=grid[y]?.[x];return t!==undefined&&t!==T.WATER&&!(t>=10);}
+function spend(c){for(const[k,v]of Object.entries(c))res[k]-=v;}
 
-function selectTool(t) {
-  selectedTool=t; selectedBuild=null;
-  document.querySelectorAll('.tool-gbtn,.gbtn').forEach(b=>b.classList.remove('active'));
+function setTool(t){
+  tool=t;build=null;
+  document.querySelectorAll('.tool-btn,.bld-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('tool-'+t)?.classList.add('active');
 }
-function selectBuild(b) {
-  selectedBuild=b; selectedTool='build';
-  document.querySelectorAll('.tool-gbtn,.gbtn').forEach(b=>b.classList.remove('active'));
+function setBuild(b){
+  build=b;tool='build';
+  document.querySelectorAll('.tool-btn,.bld-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('btn-'+b)?.classList.add('active');
 }
 
-function doAction(x,y) {
-  if (x<0||y<0||x>=COLS||y>=ROWS) return;
-  const tile=grid[y][x];
-  if (selectedTool==='dig') {
-    if (tile===T.TREE) { const g=2+(Math.random()*2|0); res.wood+=g; grid[y][x]=T.DIRT; addLog(`🪵 Зрубав дерево: +${g} дерева`); }
-    else if (tile===T.ROCK) { const g=1+(Math.random()*2|0); res.stone+=g; grid[y][x]=T.DIRT; addLog(`🪨 Здобув камінь: +${g}`); }
-    else if (tile===T.IRON) { const g=1+(Math.random()*2|0); res.iron+=g; res.stone+=1; grid[y][x]=T.DIRT; addLog(`🔩 Руда: +${g} заліза`); }
-    else if (tile===T.WATER) addLog('💧 Воду не видобути!');
-    else if (tile>=10) addLog('⚠ Спочатку знеси будівлю');
-    else addLog('⚠ Тут нема чого здобувати');
-  } else if (selectedTool==='demolish') {
-    if (tile>=10) {
-      const bKey=Object.entries(buildTypes).find(([,v])=>v.tile===tile);
-      if (bKey) { const c=bKey[1].cost; for (const [k,v] of Object.entries(c)) res[k]=(res[k]||0)+Math.floor(v/2); }
-      delete buildings[`${x},${y}`];
-      grid[y][x]=T.DIRT;
-      if (tile===T.HOUSE) { res.maxpop=Math.max(5,res.maxpop-5); recalcPop(); }
+function doAction(x,y,sx,sy){
+  if(x<0||y<0||x>=COLS||y>=ROWS)return;
+  const t=grid[y][x];
+
+  if(tool==='dig'){
+    if(t===T.TREE){const g=2+(Math.random()*3|0);res.wood+=g;grid[y][x]=T.DIRT;showFloat(sx,sy,`+${g}🪵`);addLog(`Зрубав дерево: +${g} дерева`);}
+    else if(t===T.ROCK){const g=1+(Math.random()*3|0);res.stone+=g;grid[y][x]=T.DIRT;showFloat(sx,sy,`+${g}🪨`);addLog(`Здобув камінь: +${g}`);}
+    else if(t===T.IRON){const g=1+(Math.random()*2|0);res.iron+=g;res.stone+=1;grid[y][x]=T.DIRT;showFloat(sx,sy,`+${g}🔩`);addLog(`Залізна руда: +${g} заліза`);}
+    else if(t===T.WATER)addLog('💧 Воду не видобути!');
+    else if(t>=10)addLog('⚠️ Спочатку знеси будівлю');
+    else addLog('⚠️ Тут нема ресурсів');
+  } else if(tool==='destroy'){
+    if(t>=10){
+      const bKey=Object.entries(BUILDS).find(([,v])=>v.tile===t);
+      if(bKey){const c=bKey[1].cost;for(const[k,v]of Object.entries(c))res[k]=(res[k]||0)+Math.floor(v/2);}
+      delete bldMap[`${x},${y}`];grid[y][x]=T.DIRT;
+      if(t===T.HOUSE)res.maxpop=Math.max(5,res.maxpop-5);
+      if(t===T.FORTRESS)res.maxpop=Math.max(5,res.maxpop-20);
+      res.pop=Math.min(res.pop,res.maxpop);
       addLog('💥 Знесено. Повернено 50% ресурсів.');
-    } else addLog('⚠ Тут нема будівлі');
-  } else if (selectedTool==='build'&&selectedBuild) {
-    const bType=buildTypes[selectedBuild];
-    if (!canAfford(bType.cost)) { addLog('❌ Недостатньо ресурсів!'); return; }
-    if (!canBuild(x,y)) { addLog('❌ Не можна будувати тут'); return; }
-    spend(bType.cost);
-    grid[y][x]=bType.tile;
-    buildings[`${x},${y}`]=bType.tile;
-    if (selectedBuild==='house') { res.maxpop+=5; recalcPop(); }
-    addLog(`✅ ${tileLabel[bType.tile]?.[0]||selectedBuild} збудовано!`);
-    if (selectedBuild==='townhall') setTimeout(()=>addLog('🏆🎉 ПЕРЕМОГА! РАТУША ЗБУДОВАНА!'),400);
+    } else addLog('⚠️ Тут нема будівлі');
+  } else if(tool==='build'&&build){
+    const bd=BUILDS[build];
+    if(!canAfford(bd.cost)){addLog('❌ Недостатньо ресурсів!');shakeBtn('btn-'+build);return;}
+    if(!canPlace(x,y)){addLog('❌ Не можна будувати тут');return;}
+    spend(bd.cost);
+    grid[y][x]=bd.tile;bldMap[`${x},${y}`]=bd.tile;
+    if(build==='house')res.maxpop+=5;
+    if(build==='fortress')res.maxpop+=20;
+    showFloat(sx,sy,'✅');
+    addLog(`✅ ${TNAME[bd.tile]} збудовано!`);
+    if(bd.win)setTimeout(()=>document.getElementById('win-screen').classList.add('show'),600);
   }
-  updateGameUI();
+  updateHUD();
 }
 
-function recalcPop() {
-  const houses=Object.values(buildings).filter(t=>t===T.HOUSE).length;
-  res.maxpop=5+houses*5; res.pop=Math.min(res.pop,res.maxpop);
+function shakeBtn(id){
+  const b=document.getElementById(id);
+  if(!b)return;
+  b.style.animation='shake .3s';
+  setTimeout(()=>b.style.animation='',400);
 }
-function addLog(msg) {
-  logs.push(msg); if (logs.length>4) logs.shift();
-  document.getElementById('glog').innerHTML=logs.map(l=>`<div>${l}</div>`).join('');
-}
-function getResEmoji(r) { return {wood:'🪵',stone:'🪨',food:'🌾',iron:'🔩'}[r]||r; }
 
-function gameTick() {
+function addLog(msg){logs.push(msg);if(logs.length>4)logs.shift();document.getElementById('glog').innerHTML=logs.map(l=>`<div>${l}</div>`).join('');}
+
+function showFloat(sx,sy,txt){
+  const el=document.createElement('div');
+  el.className='float-text';el.textContent=txt;
+  el.style.left=`${sx-20}px`;el.style.top=`${sy-20}px`;
+  document.getElementById('canvas-wrap').appendChild(el);
+  setTimeout(()=>el.remove(),950);
+}
+
+function getResEmoji(r){return{wood:'🪵',stone:'🪨',food:'🌾',iron:'🔩'}[r]||r;}
+
+function gameTick(){
   tick++;
-  if (tick%3===0) {
+  if(tick%4===0){
     day++;
-    document.getElementById('gday').textContent=`ДЕНЬ ${day}`;
+    document.getElementById('hud-day').textContent=`День ${day}`;
     const prod={};
-    for (const btype of Object.values(buildings)) {
-      if (btype===T.MINE) prod.stone=(prod.stone||0)+1;
-      else if (btype===T.FARM) prod.food=(prod.food||0)+2;
-      else if (btype===T.SAWMILL) prod.wood=(prod.wood||0)+1;
-      else if (btype===T.FORGE) prod.iron=(prod.iron||0)+1;
+    for(const bt of Object.values(bldMap)){
+      const bd=Object.values(BUILDS).find(b=>b.tile===bt);
+      if(bd?.prod)for(const[r,v]of Object.entries(bd.prod))prod[r]=(prod[r]||0)+v;
     }
     prod.food=(prod.food||0)-res.pop;
     const msgs=[];
-    for (const [r,amt] of Object.entries(prod)) {
-      if (amt>0) { res[r]=(res[r]||0)+amt; msgs.push(`+${amt}${getResEmoji(r)}`); }
-      else if (amt<0) { res[r]=Math.max(0,(res[r]||0)+amt); if (res.food<=0) msgs.push('😢 Голод!'); }
+    for(const[r,amt]of Object.entries(prod)){
+      if(amt>0){res[r]=(res[r]||0)+amt;msgs.push(`+${amt}${getResEmoji(r)}`);}
+      else if(amt<0){res[r]=Math.max(0,(res[r]||0)+amt);if(res.food<=0&&amt<0)msgs.push('😢 Голод!');}
     }
-    if (msgs.length) addLog(`📅 День ${day}: ${msgs.join(' ')}`);
-    updateGameUI();
+    if(msgs.length)addLog(`📅 День ${day}: ${msgs.join(' ')}`);
+    updateHUD();
   }
 }
 
-function updateGameUI() {
+function updateHUD(){
   document.getElementById('r-wood').textContent=res.wood;
   document.getElementById('r-stone').textContent=res.stone;
   document.getElementById('r-food').textContent=res.food;
   document.getElementById('r-iron').textContent=res.iron;
   document.getElementById('r-pop').textContent=res.pop;
-  document.getElementById('r-maxpop').textContent=res.maxpop;
-  for (const [id,bType] of Object.entries(buildTypes)) {
+  document.getElementById('r-max').textContent=res.maxpop;
+  for(const[id,bd]of Object.entries(BUILDS)){
     const btn=document.getElementById('btn-'+id);
-    if (!btn) continue;
-    btn.classList.toggle('disabled',!canAfford(bType.cost));
+    if(btn)btn.classList.toggle('locked',!canAfford(bd.cost));
   }
 }
 
-// Canvas input
-canvas.addEventListener('mousemove', e => {
-  if (isDragging&&dragStart) {
-    camX=Math.max(0,Math.min(dragCam.x-(e.clientX-dragStart.x),COLS*TILE-canvas.width));
-    camY=Math.max(0,Math.min(dragCam.y-(e.clientY-dragStart.y),ROWS*TILE-canvas.height));
-    return;
+// ===== INPUT =====
+canvas.addEventListener('mousemove',e=>{
+  const r=canvas.getBoundingClientRect();
+  const mx=e.clientX-r.left,my=e.clientY-r.top;
+  if(isDrag&&dragS){
+    camX=dragC.x-(e.clientX-dragS.x);camY=dragC.y-(e.clientY-dragS.y);clamp();
+    dragMoved=true;
+    document.getElementById('tooltip').style.display='none';return;
   }
+  const{tx,ty}=s2w(mx,my);hoverX=tx;hoverY=ty;
+  const tn=TNAME[grid[ty]?.[tx]];
+  const tt=document.getElementById('tooltip');
+  if(tn&&!build){tt.style.display='block';tt.textContent=tn;tt.style.left=`${mx+14}px`;tt.style.top=`${my-30}px`;}
+  else tt.style.display='none';
+});
+canvas.addEventListener('mousedown',e=>{if(e.button===1||e.button===2){e.preventDefault();isDrag=true;dragS={x:e.clientX,y:e.clientY};dragC={x:camX,y:camY};dragMoved=false;}});
+canvas.addEventListener('mouseup',e=>{if(isDrag){isDrag=false;dragS=null;}});
+canvas.addEventListener('mouseleave',()=>{isDrag=false;dragS=null;hoverX=-1;hoverY=-1;document.getElementById('tooltip').style.display='none';});
+canvas.addEventListener('click',e=>{
+  if(dragMoved){dragMoved=false;return;}
   const r=canvas.getBoundingClientRect();
-  const {tx,ty}=s2w(e.clientX-r.left,e.clientY-r.top);
-  hoverX=tx; hoverY=ty;
-  const info=tileLabel[grid[ty]?.[tx]];
-  if (info) { document.getElementById('gcoords').textContent=`(${tx},${ty}) — ${info[0]}`; document.getElementById('gcoords').style.color=info[1]; }
+  const mx=e.clientX-r.left,my=e.clientY-r.top;
+  const{tx,ty}=s2w(mx,my);doAction(tx,ty,mx,my);
 });
-canvas.addEventListener('mousedown', e => {
-  if (e.button===1||(e.button===2&&!selectedBuild)) { isDragging=true; dragStart={x:e.clientX,y:e.clientY}; dragCam={x:camX,y:camY}; }
-});
-canvas.addEventListener('mouseup', () => { isDragging=false; dragStart=null; });
-canvas.addEventListener('click', e => {
-  if (isDragging) return;
-  const r=canvas.getBoundingClientRect();
-  const {tx,ty}=s2w(e.clientX-r.left,e.clientY-r.top);
-  doAction(tx,ty);
-});
-canvas.addEventListener('contextmenu', e => {
-  e.preventDefault();
-  selectedBuild=null; selectedTool='dig';
-  document.querySelectorAll('.gbtn,.tool-gbtn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tool-dig').classList.add('active');
-});
-canvas.addEventListener('wheel', e => {
-  e.preventDefault();
-  camX=Math.max(0,Math.min(camX+e.deltaX*.5,COLS*TILE-canvas.width));
-  camY=Math.max(0,Math.min(camY+e.deltaY*.5,ROWS*TILE-canvas.height));
-}, {passive:false});
+canvas.addEventListener('contextmenu',e=>{e.preventDefault();build=null;setTool('dig');});
+canvas.addEventListener('wheel',e=>{e.preventDefault();camX+=e.deltaX*.6;camY+=e.deltaY*.6;clamp();},{passive:false});
 
 // Touch
-let lastTouch=null, touchMoved=false;
-canvas.addEventListener('touchstart', e => { const t=e.touches[0]; lastTouch={x:t.clientX,y:t.clientY}; touchMoved=false; }, {passive:true});
-canvas.addEventListener('touchmove', e => {
-  e.preventDefault(); touchMoved=true;
+let lTouch=null,tMoved=false;
+canvas.addEventListener('touchstart',e=>{const t=e.touches[0];lTouch={x:t.clientX,y:t.clientY};tMoved=false;},{passive:true});
+canvas.addEventListener('touchmove',e=>{
+  e.preventDefault();tMoved=true;
   const t=e.touches[0];
-  camX=Math.max(0,Math.min(camX-(t.clientX-lastTouch.x),COLS*TILE-canvas.width));
-  camY=Math.max(0,Math.min(camY-(t.clientY-lastTouch.y),ROWS*TILE-canvas.height));
-  lastTouch={x:t.clientX,y:t.clientY};
-}, {passive:false});
-canvas.addEventListener('touchend', e => {
-  if (touchMoved) return;
+  camX-=t.clientX-lTouch.x;camY-=t.clientY-lTouch.y;clamp();
+  lTouch={x:t.clientX,y:t.clientY};
+},{passive:false});
+canvas.addEventListener('touchend',e=>{
+  if(tMoved)return;
   const t=e.changedTouches[0];
   const r=canvas.getBoundingClientRect();
-  const {tx,ty}=s2w(t.clientX-r.left,t.clientY-r.top);
-  doAction(tx,ty);
-}, {passive:true});
+  const mx=t.clientX-r.left,my=t.clientY-r.top;
+  const{tx,ty}=s2w(mx,my);doAction(tx,ty,mx,my);
+},{passive:true});
 
-function gameLoop() {
-  if (!gameRunning) return;
-  drawGame();
-  animId=requestAnimationFrame(gameLoop);
+// ===== GAME CONTROL =====
+function gameLoop(){if(!gameRunning)return;draw();animId=requestAnimationFrame(gameLoop);}
+
+function startGame(){
+  document.getElementById('landing').classList.add('hide');
+  document.getElementById('game').classList.add('active');
+  setTimeout(()=>{
+    if(!inited){
+      inited=true;genWorld();resize();
+      camX=Math.max(0,Math.floor(COLS/2)*TILE-canvas.width/2);
+      camY=Math.max(0,Math.floor(ROWS/2)*TILE-canvas.height/2);
+      clamp();updateHUD();
+      addLog('🏘 Ласкаво просимо до Хатинграду!');
+      addLog('⛏ Клікай на ресурси для збору');
+      addLog('🏗 Вибери будівлю знизу і будуй!');
+      addLog('🎯 Мета: збудувати Ратушу 🏛');
+      tickInt=setInterval(gameTick,1800);setTool('dig');
+    }
+    gameRunning=true;gameLoop();
+  },100);
 }
 
-function openGame() {
-  document.getElementById('game-overlay').classList.add('active');
-  document.body.style.overflow='hidden';
-  if (!gameRunning) {
-    gameRunning=true;
-    generateWorld();
-    resizeCanvas();
-    camX=Math.max(0,(9*TILE)-canvas.width/2);
-    camY=Math.max(0,(9*TILE)-canvas.height/2);
-    updateGameUI();
-    addLog('🏘 Ласкаво просимо до Хатинграду!');
-    addLog('⛏ Видобувай ресурси, будуй місто!');
-    addLog('🎯 Мета: збудувати Ратушу!');
-    tickInterval=setInterval(gameTick,2000);
-    selectTool('dig');
-  }
-  gameLoop();
+function backToMenu(){
+  gameRunning=false;if(animId)cancelAnimationFrame(animId);
+  document.getElementById('win-screen').classList.remove('show');
+  document.getElementById('game').classList.remove('active');
+  document.getElementById('landing').classList.remove('hide');
 }
 
-function closeGame() {
-  document.getElementById('game-overlay').classList.remove('active');
-  document.body.style.overflow='';
-  gameRunning=false;
-  if (animId) cancelAnimationFrame(animId);
+function scrollToInfo(){
+  backToMenu();
 }
 
-window.addEventListener('resize', () => { if (gameRunning) resizeCanvas(); });
+window.addEventListener('resize',()=>{if(gameRunning){resize();clamp();}});
+
+// Shake animation
+const style=document.createElement('style');
+style.textContent='@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}';
+document.head.appendChild(style);
 </script>
 </body>
 </html>
