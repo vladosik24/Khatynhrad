@@ -11,10 +11,10 @@ jobs:
     steps:
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Java
-        uses: actions/upload-artifact@v4
+        uses: actions/setup-java@v4
         with:
           java-version: '11'
           distribution: 'temurin'
@@ -219,7 +219,7 @@ jobs:
           ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
 
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Khatynhrad-APK
           path: app/build/outputs/apk/debug/*.apk
