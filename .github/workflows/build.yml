@@ -14,10 +14,13 @@ jobs:
 
       - uses: actions/setup-java@v4
         with:
-          java-version: '11'
+          java-version: '17'
           distribution: 'temurin'
 
-      - name: Create project
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Create project structure
         run: |
           mkdir -p app/src/main/java/com/khatynhrad
           mkdir -p app/src/main/res/layout
@@ -33,7 +36,7 @@ jobs:
           [ -f manifest.json ] && cp manifest.json app/src/main/assets/ || true
           [ -f sw.js ] && cp sw.js app/src/main/assets/ || true
 
-      - name: Icons
+      - name: Generate icons
         run: |
           pip3 install Pillow -q
           python3 - << 'PYEOF'
@@ -59,9 +62,10 @@ jobs:
           base='app/src/main/res'
           for f,s in [('mipmap-mdpi',48),('mipmap-hdpi',72),('mipmap-xhdpi',96),('mipmap-xxhdpi',144),('mipmap-xxxhdpi',192)]:
               icon(s).save(f'{base}/{f}/ic_launcher.png','PNG')
+              print(f'OK {f} {s}px')
           PYEOF
 
-      - name: Android files
+      - name: Write Android files
         run: |
           cat > app/src/main/AndroidManifest.xml << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
@@ -82,6 +86,7 @@ jobs:
             </application>
           </manifest>
           EOF
+
           cat > app/src/main/java/com/khatynhrad/MainActivity.java << 'EOF'
           package com.khatynhrad;
           import android.annotation.SuppressLint;
@@ -131,6 +136,7 @@ jobs:
               @Override protected void onDestroy(){if(webView!=null)webView.destroy();super.onDestroy();}
           }
           EOF
+
           cat > app/src/main/res/layout/activity_main.xml << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -141,6 +147,7 @@ jobs:
               android:scrollbars="none"/>
           </RelativeLayout>
           EOF
+
           cat > app/src/main/res/values/styles.xml << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <resources>
@@ -150,9 +157,10 @@ jobs:
             </style>
           </resources>
           EOF
+
           echo '<?xml version="1.0" encoding="utf-8"?><resources><string name="app_name">Khatynhrad</string></resources>' > app/src/main/res/values/strings.xml
 
-      - name: Gradle files
+      - name: Write Gradle files
         run: |
           cat > app/build.gradle << 'EOF'
           apply plugin: 'com.android.application'
@@ -170,32 +178,34 @@ jobs:
               release { minifyEnabled false }
             }
             compileOptions {
-              sourceCompatibility JavaVersion.VERSION_1_8
-              targetCompatibility JavaVersion.VERSION_1_8
+              sourceCompatibility JavaVersion.VERSION_17
+              targetCompatibility JavaVersion.VERSION_17
             }
           }
           EOF
+
           cat > build.gradle << 'EOF'
           buildscript {
             repositories { google(); mavenCentral() }
-            dependencies { classpath 'com.android.tools.build:gradle:7.4.2' }
+            dependencies { classpath 'com.android.tools.build:gradle:8.1.0' }
           }
           allprojects { repositories { google(); mavenCentral() } }
           EOF
+
           echo "include ':app'" > settings.gradle
+
           cat > gradle/wrapper/gradle-wrapper.properties << 'EOF'
           distributionBase=GRADLE_USER_HOME
           distributionPath=wrapper/dists
-          distributionUrl=https\://services.gradle.org/distributions/gradle-7.5-bin.zip
+          distributionUrl=https\://services.gradle.org/distributions/gradle-8.0-bin.zip
           zipStoreBase=GRADLE_USER_HOME
           zipStorePath=wrapper/dists
           EOF
-          echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
 
       - name: Build APK
-        run: gradle assembleDebug --no-daemon
+        run: ./gradlew assembleDebug --no-daemon
         env:
-          ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+          ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
